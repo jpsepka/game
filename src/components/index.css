@@ -1,0 +1,43 @@
+.game {
+    height: 75%;
+}
+
+.gameWindow { 
+    height: 100%
+}
+
+.col {
+    height: 100%
+}
+
+pre {
+    display: block;
+    padding: 20px;
+    margin: 20px;
+    color: black;
+    background-color: white;
+    border: none;
+    overflow: hidden
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    font-family: monospace;
+    text-align: center;
+}
+  
+.mapContainer {
+    height: 100%;
+    font-size: 3rem;
+    line-height: 30px;
+    transition: transform linear 0.5s;
+}
+
+.map {
+    position: relative;
+    margin-top: 100px;
+    font-size: 3rem;
+    line-height: 30px;
+    transition: transform linear 0.5s;
+}

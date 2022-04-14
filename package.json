@@ -34,5 +34,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "a game",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpsepka/game.git"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "jpsepka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpsepka/game/issues"
+  },
+  "homepage": "https://github.com/jpsepka/game#readme"
 }

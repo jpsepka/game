@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types'
 import Map from './Map'
-import npcs from '../data/Characters/NPC';
+import './index.css'
 
 function GameWindow({ location, click, setLocation, setText, setOptions, setTarget, map,
                     setMap, initializeMap, setInitializeMap }) {

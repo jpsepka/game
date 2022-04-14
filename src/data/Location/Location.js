@@ -14,20 +14,25 @@ class Location {
         for (var i = 0; i < this.map.length; i++) {
             this.map[i] = Array.from(this.map[i]);
         }
+
+        for (var i = 0; i < this.door.length; i++) {
+            this.map[this.door[i].coords[0]][this.door[i].coords[1]] = this.door[i].icon
+        }
+        console.log(this.map);
     }
 }
 
 
 var imperialPrisonShipDownstairsMap = [" /--------------------\\",
                                        "//.....|..............\\\\",
-                                       "|......|..............=|",
-                                       "\\\\.....1..............//",
+                                       "|......|...............|",
+                                       "\\\\....................//",
                                        " \\--------------------/"];
 
 var imperialPrisonShipMap = [" /--------------------\\",
                              "//.....|..............\\\\",
-                             "|......|......=.......=|",
-                             "\\\\.....1..............//",
+                             "|......................|",
+                             "\\\\.....|..............//",
                              " \\--------------------/"];
 
 var imperialPrisonShipAboveDeckMap = ["+------------------------+",
@@ -50,8 +55,8 @@ var imperialPrisonShipAboveDeckMap = ["+------------------------+",
                                     "|  ~                 ~   |",
                                     "+------------------------+"];
 
-var censusAndExciseOfficeMap = ["  __        |==|_____                    ",
-                                "_|  |       |        |                   ",
+var censusAndExciseOfficeMap = ["  ___       |=|______                    ",
+                                " |   |      |        |                   ",
                                 "|    |      |        |                   ",
                                 "|__  |      |        |                   ",
                                 "   |0|______|    ____|__________________ ",
@@ -62,55 +67,53 @@ var censusAndExciseOfficeMap = ["  __        |==|_____                    ",
                                 "                          |_____|=|_____|"];
 
 
-var imperialPrisonShipDownstairs = new Location(0, "Imperial Prison Ship - Downstairs", 
-true, [[1, [2, 22]]], imperialPrisonShipDownstairsMap, [0, 1])
+var imperialPrisonShipDownstairs = new Location(0, "Imperial Prison Ship - Prisoner Level", 
+true, [doors.list.shipJiubRoom, doors.list.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1])
 
-var imperialPrisonShip = new Location(1, "Imperial Prison Ship", 
-true, [[0, [2, 22]], [2, [2, 14]]], imperialPrisonShipMap, [])
+var imperialPrisonShip = new Location(1, "Imperial Prison Ship - Below Deck", 
+true, [doors.list.shipUpstairsToDown, doors.list.shipUpstairsToDeck], imperialPrisonShipMap, [])
 
 var imperialPrisonShipAboveDeck = new Location(2, "Imperial Prison Ship - Above Deck", 
-false, [[1, [14,14]]], imperialPrisonShipAboveDeckMap, []);
+false, [doors.list.shipDeckToUpstairs, doors.list.shipToExciseOffice], imperialPrisonShipAboveDeckMap, []);
 
-var censusAndExciseOffice = new Location(3, "Census and Excise Office", true, [], censusAndExciseOfficeMap, []);
+var censusAndExciseOffice = new Location(3, "Census and Excise Office", 
+true, [doors.list.exciseOfficeToShip], censusAndExciseOfficeMap, []);
 
 imperialPrisonShipDownstairs.setMap();
 imperialPrisonShip.setMap();
 imperialPrisonShipAboveDeck.setMap();
+censusAndExciseOffice.setMap();
 
 var locations = {
     list: {
         imperialPrisonShipDownstairs,
         imperialPrisonShip,
-        imperialPrisonShipAboveDeck
+        imperialPrisonShipAboveDeck,
+        censusAndExciseOffice
     },
 
     getZone(oldZone, coords) {
-        var newZone = '';
-        var newZoneId = -1;
+        var door;
         var locationsArray = Object.entries(locations.list);
-        
+        var newZone = false;
+
         for (var i = 0; i < oldZone.door.length; i++) {
-            /*
-            console.log(oldZone);
-            console.log(oldZone.door[i][1][0])
-            console.log(oldZone.door[i][1][1])
-            console.log(coords[0])
-            console.log(coords[1])
-            */
-            if ((oldZone.door[i][1][0] == coords[0]) &&
-                (oldZone.door[i][1][1] == coords[1])) {
-                newZoneId = oldZone.door[i][0];
+            if ((oldZone.door[i].coords[0] == coords[0]) &&
+                 oldZone.door[i].coords[1] == coords[1]) {
+                door = oldZone.door[i];
             }
         }
 
-        for (var j = 0; j < locationsArray.length; j++) {
-            if (newZoneId == locationsArray[j][1].id) {
-                    newZone = locationsArray[j][1]
+        if (!oldZone.door.locked) {
+            for (var j = 0; j < locationsArray.length; j++) {
+                if (door.newZoneId == locationsArray[j][1].id) {
+                        newZone = locationsArray[j][1]
+                }
             }
         }
-        return newZone
+
+        return newZone;
     }
 }
-
 
 export default locations

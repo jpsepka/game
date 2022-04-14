@@ -55,3 +55,7 @@ html, body {
 #npcSpecialTextOption {
     color: blue;
 }
+
+.gameContainer {
+    overflow: hidden;
+}

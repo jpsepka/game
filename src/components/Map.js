@@ -31,9 +31,9 @@ function Map({location, click, setLocation, setText, setOptions, setTarget, map,
     function getNewCoords(newLocation) {
         var newCoords = [];
         for (var i = 0; i < newLocation.door.length; i++) {
-            if (newLocation.door[i][0] == location.id) {
-                newCoords[0] = newLocation.door[i][1][0]
-                newCoords[1] = newLocation.door[i][1][1]
+            if (newLocation.door[i].newZoneId == location.id) {
+                newCoords[0] = newLocation.door[i].coords[0]
+                newCoords[1] = newLocation.door[i].coords[1]
             }
         }
         console.log(newCoords);
@@ -53,6 +53,7 @@ function Map({location, click, setLocation, setText, setOptions, setTarget, map,
             case "1":
             case " ":
             case ".":
+            case "0":
                 setTarget({name: ".", opinion: 0})
                 setOptions([])
                 setText([])

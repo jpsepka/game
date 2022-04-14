@@ -83,13 +83,28 @@ function App() {
 
   return (
     <>
-      <GameWindow location={location} click={click} setLocation={setLocation}
-      setText={setText} setOptions={setOptions} setTarget={setTarget}
-      map={map} setMap={setMap}/>
-      <TextWindow setOptions={setOptions} checkIfQuestComplete={checkIfQuestComplete} 
-      setQuestsCompleted={setQuestsCompleted} checkQuestComplete={checkQuestComplete} 
-      questLog={questLog} options={options} text={text} target={target} setText={setText} 
-      setQuestLog={setQuestLog} handleQuestItems={handleQuestItems} handleQuestItemHandIn={handleQuestItemHandIn}/>
+      <GameWindow location={location} 
+                  click={click} 
+                  setLocation={setLocation}
+                  setText={setText} 
+                  setOptions={setOptions} 
+                  setTarget={setTarget}
+                  map={map} 
+                  setMap={setMap} 
+                  player={player} />
+
+      <TextWindow setOptions={setOptions} 
+                  checkIfQuestComplete={checkIfQuestComplete} 
+                  setQuestsCompleted={setQuestsCompleted} 
+                  checkQuestComplete={checkQuestComplete} 
+                  questLog={questLog} 
+                  options={options} 
+                  text={text} 
+                  target={target} 
+                  setText={setText} 
+                  setQuestLog={setQuestLog} 
+                  handleQuestItems={handleQuestItems} 
+                  handleQuestItemHandIn={handleQuestItemHandIn} />
     </>
   );
 }

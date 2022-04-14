@@ -1,0 +1,57 @@
+html, body {
+    height: 100%;
+    overflow: hidden
+}
+
+.game {
+    height: 75%;
+}
+
+.text {
+    height: 25%;
+}
+
+.row.content {
+    height: 100%;
+}
+
+.col-sm-8 {
+    height: 100%;
+}
+
+.col-sm-2.sidenav {
+    height: 100%;
+}
+
+.progress {
+    position: relative;
+  }
+  
+.progress-bar-text {
+    position: absolute;
+    text-align: center;
+    line-height: 20px; /* line-height should be equal to bar height */
+    overflow: hidden;
+    right: 0;
+    left: 0;
+    top: 0;
+}
+    
+.sidenav {
+    padding-top: 20px;
+    background-color: white;
+}
+
+#npcTextBox {
+    position: relative;
+    overflow: auto;
+    height: 90%;
+}
+
+#npcTextOptions {
+    overflow: auto;
+}
+
+#npcSpecialTextOption {
+    color: blue;
+}

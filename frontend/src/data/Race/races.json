@@ -1,0 +1,13 @@
+{
+    "races": [
+        {
+            "name":"Dark Elf",
+            "baseStats": [1,1,2,1,1]
+        },
+        {
+            "name":"Nord",
+            "baseStats": [2,1,1,1,1]
+        }
+    ]
+}
+

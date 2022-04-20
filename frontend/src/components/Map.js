@@ -42,7 +42,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
             case " ":
             case ".":
                 setTranslate({transform: 'translateX('+(player.coords[1]*-1)+'ch) translateY('+(player.coords[0]*-1)+'em)'})
-                setTarget({name: ".", opinion: 0})
+                setTarget(false)
                 setOptions([])
                 setText([])
                 var updatedMap = [];

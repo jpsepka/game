@@ -9,7 +9,7 @@ const createCharacter = async (characterData, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-
+  console.log(characterData);
   const response = await axios.post(API_URL, characterData, config)
   return response.data
 }
@@ -40,22 +40,10 @@ const deleteCharacter = async (characterId, token) => {
   return response.data
 }
 
-// Update user character
-const updateCharacter = async (test, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-  const response = await axios.put(API_URL + test[0], test[1], config)
-  return response.data
-}
-
 const characterService = {
   createCharacter,
   getCharacters,
   deleteCharacter,
-  updateCharacter
 }
 
 export default characterService

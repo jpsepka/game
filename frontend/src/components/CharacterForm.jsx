@@ -12,8 +12,12 @@ function CharacterForm() {
     const dispatch = useDispatch()
 
     const onSubmit = e => {
-        dispatch(createCharacter({player: player, npcs: npcs, dialogue: dialogue, 
-            items: items, locations: locations, questList: questList}))
+        dispatch(createCharacter({player: player, 
+                                  npcs: npcs, 
+                                  dialogue: dialogue, 
+                                  items: items, 
+                                  locations: locations, 
+                                  questList: questList}))
     }
 
     return (

@@ -15,6 +15,7 @@ export const createCharacter = createAsyncThunk(
   async (characterData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
+      console.log(characterData);
       return await characterService.createCharacter(characterData, token)
     } catch (error) {
       const message =
@@ -54,25 +55,6 @@ export const deleteCharacter = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await characterService.deleteCharacter(id, token)
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString()
-      return thunkAPI.rejectWithValue(message)
-    }
-  }
-)
-
-//Update user character
-export const updateCharacter = createAsyncThunk(
-  'characters/update',
-  async (test, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token
-      return await characterService.updateCharacter(test, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -130,22 +112,6 @@ export const characterSlice = createSlice({
         )
       })
       .addCase(deleteCharacter.rejected, (state, action) => {
-        state.isLoading = false
-        state.isError = true
-        state.message = action.payload
-      })
-      .addCase(updateCharacter.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(updateCharacter.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.isSuccess = true
-        state.characters = state.characters.filter(
-          (character) => character._id !== action.payload.id
-        )
-        state.characters.push(action.payload);
-      })
-      .addCase(updateCharacter.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

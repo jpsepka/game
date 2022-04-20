@@ -136,8 +136,10 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
     
     return (
         <div className="container-fluid text">
-            <p id="npcName" className="text-center">{!notarget ? target.name : (<br/>)}</p>
-            <div id="npcTextBox" className="col-sm-10">
+            <p className="npcNameBox text-center">
+                <span className="npcName">{!notarget ? target.name : (" ")}</span>
+            </p>
+            <div className="col-sm-10 npcTextBox">
             {!notarget ? text.map((line, id) => (
                 <p id={id}>{line}</p>
             )) : ""}
@@ -151,7 +153,7 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
                     <div className="progress-bar-text">{target.opinion} / 100</div>
                 </div>
                 <ul>
-                <div id="npcTextOptions">{!notarget ? options.map((option, id) => (
+                <div className="npcTextOptions">{!notarget ? options.map((option, id) => (
                     <>
                         <p><a id={id} onClick={()=> {
                             handleOptionClick(id)

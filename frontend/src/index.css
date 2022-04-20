@@ -7,8 +7,13 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  background-color: black;
   height: 100vh;
+  color: white;
+}
+
+button {
+  color: black;
 }
 
 a {
@@ -224,11 +229,49 @@ html, body {
 }
 
 .text {
-    height: 250px;
-    border-style: dashed
+  height: 250px;
+  border: 5px solid #F0E68C;
+  padding-right: 0px;
+  padding-left: 0px;
+  background-color: rgb(34, 34, 34);
+  color: #F0E68C;
+}
+
+.npcTextBox {
+  margin: 5px;
+  margin-left: 15px;
+  border: 1px solid #F0E68C;
+  text-align: left;
+  overflow: auto;
+  height: 190px;
+  width: 80%;
+}
+
+a {
+  color: #F0E68C;
+}
+
+.npcTextOptions {
+  padding: 0px;
+  padding-left: 5px;
+  text-align: left;
+  border: 1px solid #F0E68C;
+  overflow:auto;
+  height: 150px;
+}
+
+.npcName {
+  background-color: black;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.npcNameBox {
+  background-color: #F0E68C;
 }
 
 .progress {
+    margin-top: 5px;
     position: relative;
   }
   
@@ -240,23 +283,12 @@ html, body {
     right: 0;
     left: 0;
     top: 0;
+    color: black
 }
     
 .sidenav {
     padding-top: 20px;
     background-color: white;
-}
-
-#npcTextBox {
-    position: relative;
-    text-align: left;
-    overflow: auto;
-    height: 90%;
-    border: 2px black
-}
-
-#npcTextOptions {
-    overflow: auto;
 }
 
 #npcSpecialTextOption {
@@ -284,8 +316,8 @@ pre {
     display: block;
     padding: 20px;
     margin: 20px;
-    color: black;
-    background-color: white;
+    color: white;
+    background-color: black;
     border: none;
     overflow:visible
 }

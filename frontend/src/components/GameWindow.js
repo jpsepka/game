@@ -1,16 +1,17 @@
 import React from 'react';
 import Map from './Map'
-import {updateCharacter} from '../features/characters/characterSlice'
+import {deleteCharacter} from '../features/characters/characterSlice'
 import {useDispatch} from 'react-redux';
 import TextWindow from './TextWindow';
 import { useState } from 'react';
 import {Player} from '../data/Characters/Player'
 import {Location} from '../data/Location/Location'
 import { useEffect } from 'react';
+import {createCharacter} from '../features/characters/characterSlice'
 
 function GameWindow({ characterChoice, setCharacterChoice }) {
     const [player, setPlayer] = useState({coords: [2,4], map: false})
-    const [target, setTarget] = useState({name: "", opinion: 0});
+    const [target, setTarget] = useState(false);
     const [text, setText] = useState([])
     const [options, setOptions] = useState([])
     const [questLog, setQuestLog] = useState([])
@@ -95,12 +96,13 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const dispatch = useDispatch();
      
     function saveGame() {
-        console.log(characterChoice);
         var updatedCharacterChoice = JSON.parse(JSON.stringify(characterChoice));
         var updatedCharacter = JSON.parse(JSON.stringify(player));
+        dispatch(deleteCharacter(characterChoice._id));
         updatedCharacterChoice.character.player = updatedCharacter
+        setCharacterChoice(updatedCharacterChoice);
         console.log(updatedCharacterChoice);
-        dispatch(updateCharacter([characterChoice._id, updatedCharacterChoice]))
+        dispatch(createCharacter(updatedCharacterChoice.character))
     }
 
     return (
@@ -137,12 +139,13 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                 </div>
             </div>
         </div>
-
+        {target ? 
         <TextWindow setOptions={setOptions} checkIfQuestComplete={checkIfQuestComplete} 
           setQuestsCompleted={setQuestsCompleted} checkQuestComplete={checkQuestComplete} 
           questLog={questLog} options={options} text={text} target={target} setText={setText} 
           setQuestLog={setQuestLog} handleQuestItems={handleQuestItems} 
           characterChoice={characterChoice} setPlayer={setPlayer} player={player}/>
+          : <></>}
         </>
     );
 }

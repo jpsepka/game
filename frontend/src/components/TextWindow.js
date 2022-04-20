@@ -3,11 +3,10 @@ import {useState, useEffect} from 'react'
 import dialogue from '../data/Dialogue/Dialogue';
 import questList from '../data/Quest/Quest';
 import npcs from '../data/Characters/NPC';
-import player from '../data/Characters/Player';
 
 function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted, 
     checkQuestComplete, questLog, options, text, target, setText, setQuestLog, 
-    handleQuestItems }) {
+    handleQuestItems, setPlayer, player }) {
     var notarget = true;
     const [getUserInput, setGetUserInput] = useState(false);
     const [choices, setChoices] = useState([]);
@@ -106,7 +105,11 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
             var option = target.dialogue[choice].option;
             var text = target.dialogue[choice].text;
             setText(old => [...old, option, text]);
-            player.promptName();
+
+            var newPlayer = player;
+            newPlayer.promptName();
+            setPlayer(newPlayer);
+            
             setOptions([])
             console.log(player);
             player.location.map[3][7] = "1";

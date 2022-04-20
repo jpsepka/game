@@ -1,7 +1,5 @@
 const ayncHandler = require('express-async-handler')
-
 const Character = require('../models/characterModel')
-const User = require('../models/userModel')
 
 //@desc get characters
 //@route get /api/characters

@@ -86,20 +86,20 @@ h3 {
   color: #828282;
 }
 
-.goals {
+.characters {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
 
-.goal {
+.character {
   background-color: #f4f4f4;
   margin: 10px 0;
   padding: 20px 0 10px;
   position: relative;
 }
 
-.goal.close {
+.character.close {
   position: absolute;
   top: 10px;
   right: 15px;
@@ -219,8 +219,13 @@ html, body {
     overflow: hidden
 }
 
+.root {
+  height: 100%
+}
+
 .text {
-    height: 25%;
+    height: 250px;
+    border-style: dashed
 }
 
 .progress {
@@ -244,8 +249,10 @@ html, body {
 
 #npcTextBox {
     position: relative;
+    text-align: left;
     overflow: auto;
     height: 90%;
+    border: 2px black
 }
 
 #npcTextOptions {
@@ -258,6 +265,7 @@ html, body {
 
 .guide {
     list-style-type: none;
+    text-align: left;
 }
 
 .gameWindow { 
@@ -283,7 +291,8 @@ pre {
 }
 
 .game {
-    height: 75%
+    height: 75%;
+    margin-bottom: 20px;
 }
 
 .row {

@@ -152,4 +152,4 @@ var player = new Player([2,4], "Name", "Race", locations.list.imperialPrisonShip
 player.inventory=[[items.hearthstone, 1], [items.tradeGoods.bearAss, 10]]
 
 export {Player}
-export default player;
+export {player};

@@ -7,8 +7,30 @@ const characterSchema = mongoose.Schema({
         ref: 'User'
     },
     character: {
-        type: Object,
-        required: [true, "wtf"]
+        player: {
+            type: Object,
+            required: [true, "wtf"]
+        },
+        npcs: {
+            type: Object,
+            required: [true, "wtf"]
+        },
+        dialogue: {
+            type: Object,
+            required: [true, "wtf"]
+        },
+        items: {
+            type: Object,
+            required: [true, "wtf"]
+        },
+        locations: {
+            type: Object,
+            required: [true, "wtf"]
+        },
+        questList: {
+            type: Object,
+            required: [true, "wtf"]
+        }
     }
 }, {
     timestamps: true

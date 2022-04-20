@@ -1,20 +1,19 @@
 import {useState} from 'react'
 import {useDispatch} from 'react-redux'
 import {createCharacter} from '../features/characters/characterSlice'
-import {Player} from '../data/Characters/Player'
-import locations from '../data/Location/Location'
+import npcs from '../data/Characters/NPC'
+import dialogue from '../data/Dialogue/Dialogue';
+import items from '../data/Items';
+import locations from '../data/Location/Location';
+import questList from '../data/Quest/Quest';
+import {player} from '../data/Characters/Player'
 
 function CharacterForm() {
-    const [text, setText] = useState('')
-
     const dispatch = useDispatch()
 
     const onSubmit = e => {
-        var player = new Player([2,4], "", "", locations.list.imperialPrisonShipDownstairs, 
-            [], [1,1,1,1,1], [0,0], [0,0], [0,0], 1, [], [], [0,100], 0, [], 
-            0, [], "@");
-        dispatch(createCharacter(player))
-        setText('')
+        dispatch(createCharacter({player: player, npcs: npcs, dialogue: dialogue, 
+            items: items, locations: locations, questList: questList}))
     }
 
     return (

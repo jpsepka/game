@@ -71,7 +71,6 @@ export const updateCharacter = createAsyncThunk(
   'characters/update',
   async (test, thunkAPI) => {
     try {
-      console.log(test);
       const token = thunkAPI.getState().auth.user.token
       return await characterService.updateCharacter(test, token)
     } catch (error) {
@@ -144,7 +143,6 @@ export const characterSlice = createSlice({
         state.characters = state.characters.filter(
           (character) => character._id !== action.payload.id
         )
-        console.log(action);
         state.characters.push(action.payload);
       })
       .addCase(updateCharacter.rejected, (state, action) => {

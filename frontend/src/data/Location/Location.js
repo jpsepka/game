@@ -1,16 +1,17 @@
 import doors from "./GameObjects/Door";
 
 class Location {
-    constructor(id, name, indoors, door, map, npcs) {
+    constructor(id, name, indoors, door, map, npcs, emptyMap) {
         this.id = id;
         this.name = name;
         this.indoors = indoors;
         this.door = door;
         this.map = map;
         this.npcs = npcs;
+        this.emptyMap = emptyMap
     }
 
-    setMap() {
+    initializeMap() {
         for (var i = 0; i < this.map.length; i++) {
             this.map[i] = Array.from(this.map[i]);
         }
@@ -18,6 +19,11 @@ class Location {
         for (var i = 0; i < this.door.length; i++) {
             this.map[this.door[i].coords[0]][this.door[i].coords[1]] = this.door[i].icon
         }
+    }
+
+    setMap(updatedMap) {
+        console.log("hi");
+        this.map = updatedMap
     }
 }
 
@@ -67,7 +73,7 @@ var censusAndExciseOfficeMap = ["   __       |=|______                    ",
 
 
 var imperialPrisonShipDownstairs = new Location(0, "Imperial Prison Ship - Prisoner Level", 
-true, [doors.list.shipJiubRoom, doors.list.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1])
+true, [doors.list.shipJiubRoom, doors.list.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1], imperialPrisonShipDownstairsMap)
 
 var imperialPrisonShip = new Location(1, "Imperial Prison Ship - Below Deck", 
 true, [doors.list.shipUpstairsToDown, doors.list.shipUpstairsToDeck], imperialPrisonShipMap, [])
@@ -78,10 +84,10 @@ false, [doors.list.shipDeckToUpstairs, doors.list.shipToExciseOffice], imperialP
 var censusAndExciseOffice = new Location(3, "Census and Excise Office", 
 true, [doors.list.exciseOfficeToShip], censusAndExciseOfficeMap, []);
 
-imperialPrisonShipDownstairs.setMap();
-imperialPrisonShip.setMap();
-imperialPrisonShipAboveDeck.setMap();
-censusAndExciseOffice.setMap();
+imperialPrisonShipDownstairs.initializeMap();
+imperialPrisonShip.initializeMap();
+imperialPrisonShipAboveDeck.initializeMap();
+censusAndExciseOffice.initializeMap();
 
 var locations = {
     list: {
@@ -115,4 +121,5 @@ var locations = {
     }
 }
 
+export {Location}
 export default locations

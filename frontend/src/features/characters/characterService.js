@@ -47,11 +47,7 @@ const updateCharacter = async (test, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  console.log(test);
-  console.log(API_URL + test[0])
-  const response = await axios.post(API_URL + test[0], test[1], config)
-  console.log(response);
-
+  const response = await axios.put(API_URL + test[0], test[1], config)
   return response.data
 }
 

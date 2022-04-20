@@ -8,6 +8,6 @@ const { getCharacters,
 const {protect} = require('../middleware/authMiddleware')
 
 router.route('/').get(protect, getCharacters).post(protect, setCharacter)
-router.route('/:id').delete(protect, deleteCharacter).post(protect, updateCharacter);
+router.route('/:id').delete(protect, deleteCharacter).put(protect, updateCharacter);
 
 module.exports = router

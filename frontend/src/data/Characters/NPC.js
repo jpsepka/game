@@ -37,27 +37,27 @@ var npcs = {
         guard
     },
 
-    getNpc(type, info) {
+    getNpcByLocation(location, coords) {
         var npc = '';
         var listOfNpcs = Object.entries(npcs.list);
-        switch(type) {
-        case 'id':
-            for (var i = 0; i < listOfNpcs.length; i++) {
-            if (info == listOfNpcs[i][1].id) {
-                npc = listOfNpcs[i][1];
-            }
-            }
-        break;
-        case 'location':
-            for (var i = 0; i < listOfNpcs.length; i++) {
-            if (listOfNpcs[i][1].location == info[0]) {
-                if ((listOfNpcs[i][1].coords[0] == info[1][0]) && 
-                    (listOfNpcs[i][1].coords[1] == info[1][1])) {
-                npc = listOfNpcs[i][1]
+        for (var i = 0; i < listOfNpcs.length; i++) {
+            if (listOfNpcs[i][1].location.id == location.id) {
+                if ((listOfNpcs[i][1].coords[0] == coords[0]) && 
+                    (listOfNpcs[i][1].coords[1] == coords[1])) {
+                    npc = listOfNpcs[i][1]
                 }
             }
+        }
+        return npc
+    },
+
+    getNpcById(id) {
+        var npc = '';
+        var listOfNpcs = Object.entries(npcs.list);
+        for (var i = 0; i < listOfNpcs.length; i++) {
+            if (id == listOfNpcs[i][1].id) {
+                npc = listOfNpcs[i][1];
             }
-        break;
         }
         return npc
     },

@@ -18,15 +18,11 @@ var guardOpener2 = new Dialogue(4, "You've finally arrived, but our records don'
 
 var dialogue = {
     starterDialogue: {
-        jiub: {
             jiubOpener0,
             jiubOpener1,
-        },
-        guard: {
             guardOpener0,
             guardOpener1,
             guardOpener2
-        }
     },
 };
 

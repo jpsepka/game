@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import {createCharacter} from '../features/characters/characterSlice'
 
 function GameWindow({ characterChoice, setCharacterChoice }) {
-    const [player, setPlayer] = useState({coords: [2,4], map: false})
+    const [player, setPlayer] = useState(characterChoice.character.player)
     const [target, setTarget] = useState(false);
     const [text, setText] = useState([])
     const [options, setOptions] = useState([])
@@ -20,7 +20,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const [map, setMap] = useState([[[],[]],[[],[]]]);
     
     useEffect(() => {
-        console.log(characterChoice)
         var player = JSON.parse(JSON.stringify(characterChoice.character.player));
         var location = player.location;
         location = Object.assign(new Location(), location);
@@ -30,7 +29,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     }, [characterChoice])
 
     function click(person) {
-        console.log(person);
         setOptions([])
         setTarget(person);
         setText([person.greeting]);
@@ -101,7 +99,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         dispatch(deleteCharacter(characterChoice._id));
         updatedCharacterChoice.character.player = updatedCharacter
         setCharacterChoice(updatedCharacterChoice);
-        console.log(updatedCharacterChoice);
         dispatch(createCharacter(updatedCharacterChoice.character))
     }
 

@@ -25,16 +25,21 @@ class NPC extends Person {
 var jiub = new NPC([2, 6], "Jiub", "Dark Elf", 
 locations.list.imperialPrisonShipDownstairs, [], 
 [50, 50, 50, 50, 50], 200, 100, 150, 25, [], 
-[0,0,0,0,0], 50, [dialogue.starterDialogue.jiub.jiubOpener1], "@", dialogue.starterDialogue.jiub.jiubOpener0.text, 0);
+[0,0,0,0,0], 50, [dialogue.starterDialogue.jiubOpener1], "@", dialogue.starterDialogue.jiubOpener0.text, 0);
 
 var guard = new NPC([3, 21], "Guard", "race", locations.list.imperialPrisonShipDownstairs,
 "faction", "stats", "health", "energy", "mana", "level", "inventory", "baseStats",
 50, [], "@", 'Up the stairs, prisoner!', 1);
 
+var socuciusErgalla = new NPC([5,33], "Socucius Ergalla", "Breton", locations.list.censusAndExciseOffice, 
+"Faction", [0,0,0,0,0], [102,102], [100,100], [128,128], 14, [], [], 
+40, [], "@", "Ahh yes, we've been expecting you. You'll have to be recorded before you're officially released. There are a few ways we can do this.", 2);
+
 var npcs = {
     list: {
         jiub,
-        guard
+        guard,
+        socuciusErgalla
     },
 
     getNpcByLocation(location, coords) {

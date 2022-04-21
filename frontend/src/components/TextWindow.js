@@ -139,7 +139,7 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
             <p className="npcNameBox text-center">
                 <span className="npcName">{!notarget ? target.name : (" ")}</span>
             </p>
-            <div className="col-sm-10 npcTextBox">
+            <div className="col-sm-10 npcTextBox goldBoxOutline">
             {!notarget ? text.map((line, id) => (
                 <p id={id}>{line}</p>
             )) : ""}

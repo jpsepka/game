@@ -5,18 +5,32 @@ import locations from "../data/Location/Location";
 function Map({click, setText, setOptions, setTarget, map, setMap, player, setPlayer }) {
 
     const [translate, setTranslate] = useState({transform: 'translateX('+(player.coords[1]*-1)+'ch) translateY('+(player.coords[0]*-1)+'em)'})
+    const [location, setLocation] = useState('');
 
     useEffect(() => {
         function handleMovement(e) {
-            var updatedPlayer = player;
-            updatedPlayer.coords = move(e.keyCode)
-            updateMap(e.keyCode, updatedPlayer)
+            if ((e.keyCode >= 37) && e.keyCode <= 40) {
+                var updatedPlayer = player;
+                updatedPlayer.coords = move(e.keyCode)
+                console.log(updatedPlayer.coords);
+                updateMap(e.keyCode, updatedPlayer)
+            } else {
+                var loadedMap = loadMap();
+                setMap(loadedMap);
+                setTranslate({transform: 'translateX('+(player.coords[1]*-1)+'ch) translateY('+(player.coords[0]*-1)+'em)'})
+            }
         }
         document.addEventListener("keydown", handleMovement);
         return function cleanup() {
           document.removeEventListener("keydown", handleMovement);
         };
       });
+
+    useEffect(() => {
+        setLocation(player.location.name);
+        document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}))
+        console.log("hi");
+    }, [location])
 
     function getNewCoords(newLocation) {
         var newCoords = [];
@@ -37,6 +51,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
                 updatedPlayer.coords = getNewCoords(newLocation);
                 updatedPlayer.location = newLocation;
                 setMap(newLocation.map);
+                setLocation(newLocation);
             break;
             case "1":
             case " ":
@@ -45,19 +60,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
                 setTarget(false)
                 setOptions([])
                 setText([])
-                var updatedMap = [];
-                for (var i = 0; i < player.location.map.length; i++) {
-                    updatedMap[i] = Array.from(player.location.map[i]);
-                    if (i == player.coords[0]) {
-                        updatedMap[player.coords[0]][player.coords[1]] = "@";    
-                    }
-                    for (var j = 0; j < player.location.npcs.length; j++) {
-                        var npc = npcs.getNpcById(player.location.npcs[j]);
-                        if (i == npc.coords[0]) {
-                        updatedMap[i][npc.coords[1]] = npc.icon;
-                        }
-                    }
-                }
+                var updatedMap = loadMap();
                 setMap(updatedMap)
             break;
             case "@":
@@ -79,7 +82,25 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
             }
             setPlayer(updatedPlayer)
         }
-      }
+    }
+
+    function loadMap() {
+        console.log(player);
+        var updatedMap = [];
+        for (var i = 0; i < player.location.map.length; i++) {
+            updatedMap[i] = Array.from(player.location.map[i]);
+            if (i == player.coords[0]) {
+                updatedMap[player.coords[0]][player.coords[1]] = "@";    
+            }
+            for (var j = 0; j < player.location.npcs.length; j++) {
+                var npc = npcs.getNpcById(player.location.npcs[j]);
+                if (i == npc.coords[0]) {
+                updatedMap[i][npc.coords[1]] = npc.icon;
+                }
+            }
+        }
+        return updatedMap
+    }
 
     function move(key) {
         var newCoords = player.coords;

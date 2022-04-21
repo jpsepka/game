@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgb(15, 15, 15);
   height: 100vh;
   color: white;
 }
@@ -98,13 +98,14 @@ h3 {
 }
 
 .character {
-  background-color: #f4f4f4;
+  background-color: white;
   margin: 10px 0;
   padding: 20px 0 10px;
   position: relative;
+  color: black;
 }
 
-.character.close {
+.close {
   position: absolute;
   top: 10px;
   right: 15px;
@@ -230,7 +231,6 @@ html, body {
 
 .text {
   height: 250px;
-  border: 5px solid #F0E68C;
   padding-right: 0px;
   padding-left: 0px;
   background-color: rgb(34, 34, 34);
@@ -238,13 +238,49 @@ html, body {
 }
 
 .npcTextBox {
+  padding-left: 5px;
   margin: 5px;
   margin-left: 15px;
-  border: 1px solid #F0E68C;
   text-align: left;
   overflow: auto;
   height: 190px;
   width: 80%;
+}
+
+.mainGoldBoxOutline {
+  border: 5px solid rgb(188,162,117);
+  height: 100cm;
+}
+
+.goldBoxOutline {
+  border: 1px solid rgb(188,162,117);
+}
+
+.appearanceBox {
+  font-size: 5em;
+  width: 5em;
+  height: 5em;
+  padding-top: 1.5em;
+  text-align: center;
+}
+
+.skillBonuses {
+  text-align: left;
+}
+
+.characterSpecials {
+  width: 200px;
+}
+
+.raceBox {
+  width: 800px;
+  padding: 20px;
+  text-align: left;
+}
+
+.raceList {
+  height: 250px;
+  overflow: auto;
 }
 
 a {
@@ -262,12 +298,14 @@ a {
 
 .npcName {
   background-color: black;
-  padding-left: 2px;
-  padding-right: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2px;
+  padding-bottom: 3px;
 }
 
 .npcNameBox {
-  background-color: #F0E68C;
+  background-color: rgb(188,162,117);;
 }
 
 .progress {
@@ -317,7 +355,7 @@ pre {
     padding: 20px;
     margin: 20px;
     color: white;
-    background-color: black;
+    background-color: rgb(15, 15, 15);;
     border: none;
     overflow:visible
 }

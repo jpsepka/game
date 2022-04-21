@@ -3,7 +3,6 @@ import {deleteCharacter} from '../features/characters/characterSlice'
 
 function CharacterItem({setCharacterChoice, character}) {
     const dispatch = useDispatch();
-    console.log(character);
     return (
         <div className="character">
             <div>

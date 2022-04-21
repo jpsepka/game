@@ -1,14 +1,13 @@
 import doors from "./GameObjects/Door";
 
 class Location {
-    constructor(id, name, indoors, door, map, npcs, emptyMap) {
+    constructor(id, name, indoors, door, map, npcs) {
         this.id = id;
         this.name = name;
         this.indoors = indoors;
         this.door = door;
         this.map = map;
         this.npcs = npcs;
-        this.emptyMap = emptyMap
     }
 
     initializeMap() {
@@ -40,25 +39,25 @@ var imperialPrisonShipMap = [" /--------------------\\",
                              "\\\\.....|..............//",
                              " \\--------------------/"];
 
-var imperialPrisonShipAboveDeckMap = ["+------------------------+",
-                                    "|  (     /______\\        |",
-                                    "|   )   /   _    \\       |",
-                                    "|  ||___|  |_|   |       |",
-                                    "| /__8__|   _    |       |",
-                                    "| | 888 |  /*\\   |       |",
-                                    "| |__|__|__|=|___|       |",
-                                    "|________         | ____/|",
-                                    "|        \\    __|_/      |",
-                                    "| ~       |..|   ~       |",
-                                    "|    ~    |..|       ~   |",
-                                    "| ~    ~  |..|   ~       |",
-                                    "| /-------|..|---------\\ |",
-                                    "|//                    \\\\|",
-                                    "||            =         ||",
-                                    "|\\\\                    //|",
-                                    "| \\--------------------/ |",
-                                    "|  ~                 ~   |",
-                                    "+------------------------+"];
+var imperialPrisonShipAboveDeckMap =   ["              ______          ",
+                                        "       (     /______\\         ",
+                                        "       )   /   _    \\        ",
+                                        "      ||___|  |_|   |        ",
+                                        "     /__8__|   _    |        ",
+                                        "     | 888 |  /*\\   |        ",
+                                        "     |__|__|__|=|___|       / ",
+                                        "\\___|                | ____/ ",
+                                        "    \\|_______    ___|_/       ",
+                                        "     ~       |..|   ~      ~  ",
+                                        "        ~    |..|       ~    ",
+                                        "     ~    ~  |..|   ~        ",
+                                        "~    /-------|..|---------\\  ~",
+                                        "    //                    \\\\   ~",
+                                        " ~  |            =         |   ~",
+                                        "    \\\\                    // ",
+                                        " ~   \\--------------------/       ~",
+                                        "    ~                 ~       ~",
+                                        "         ~         ~       "];
 
 var censusAndExciseOfficeMap = ["   __       |=|______                    ",
                                 " _|  |      |        |                   ",
@@ -69,11 +68,12 @@ var censusAndExciseOfficeMap = ["   __       |=|______                    ",
                                 "  |                       |       |__|  |",
                                 "  |-----------------------|@            |",
                                 "                          |+            |",
-                                "                          |-----|=|-----|"];
+                                "                          |-----|=|-----|",
+                                "                                ***      "];
 
 
 var imperialPrisonShipDownstairs = new Location(0, "Imperial Prison Ship - Prisoner Level", 
-true, [doors.list.shipJiubRoom, doors.list.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1], imperialPrisonShipDownstairsMap)
+true, [doors.list.shipJiubRoom, doors.list.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1])
 
 var imperialPrisonShip = new Location(1, "Imperial Prison Ship - Below Deck", 
 true, [doors.list.shipUpstairsToDown, doors.list.shipUpstairsToDeck], imperialPrisonShipMap, [])

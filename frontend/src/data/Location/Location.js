@@ -89,37 +89,12 @@ imperialPrisonShip.initializeMap();
 imperialPrisonShipAboveDeck.initializeMap();
 censusAndExciseOffice.initializeMap();
 
-var locations = {
-    list: {
+var locations = [
         imperialPrisonShipDownstairs,
         imperialPrisonShip,
         imperialPrisonShipAboveDeck,
         censusAndExciseOffice
-    },
-
-    getZone(oldZone, coords) {
-        var door;
-        var locationsArray = Object.entries(locations.list);
-        var newZone = false;
-
-        for (var i = 0; i < oldZone.door.length; i++) {
-            if ((oldZone.door[i].coords[0] == coords[0]) &&
-                 oldZone.door[i].coords[1] == coords[1]) {
-                door = oldZone.door[i];
-            }
-        }
-
-        if (!oldZone.door.locked) {
-            for (var j = 0; j < locationsArray.length; j++) {
-                if (door.newZoneId == locationsArray[j][1].id) {
-                        newZone = locationsArray[j][1]
-                }
-            }
-        }
-
-        return newZone;
-    }
-}
+]
 
 export {Location}
 export default locations

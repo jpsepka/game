@@ -1,12 +1,10 @@
 import React from 'react';
 import {useState, useEffect} from 'react'
-import dialogue from '../data/Dialogue/Dialogue';
-import questList from '../data/Quest/Quest';
-import npcs from '../data/Characters/NPC';
 
 function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted, 
     checkQuestComplete, questLog, options, text, target, setText, setQuestLog, 
-    handleQuestItems, setPlayer, player }) {
+    handleQuestItems, setPlayer, player, gameData, updateGameData, setGameData }) {
+    
     var notarget = true;
     const [getUserInput, setGetUserInput] = useState(false);
     const [choices, setChoices] = useState([]);
@@ -18,7 +16,7 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
     }
 
     function getFollowUpQuest(quest) {
-        var quests = Object.entries(questList);
+        var quests = Object.entries(gameData.dialogue);
         var followUpQuest = '';
         for(var i = 0; i < quests.length; i++) {
             if (quest.followup == quests[i][1].questId) {
@@ -30,7 +28,7 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
 
     function getFollowUpDialogue(quest) {
         var followUpQuest = getFollowUpQuest(quest);
-        var dialogues = Object.entries(dialogue.questDialogue);
+        var dialogues = Object.entries(gameData.dialogue.questDialogue);
         var followUpDialogue = '';
         for (var i = 0; i < dialogues.length; i++) {
             if (followUpQuest.dialogue == dialogues[i][1].id) {
@@ -41,9 +39,9 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
     }
 
     function updateFollowUpNpcDialogue(dialogue) {
-        var followUpNpcId = dialogue.quest.receiverId
-        var npcsArray = Object.entries(npcs);
-       for (var i = 0; i < npcsArray.length; i++) {
+        var followUpNpcId = gameData.dialogue.quest.receiverId
+        var npcsArray = Object.entries(gameData.dialogue);
+        for (var i = 0; i < npcsArray.length; i++) {
            if (followUpNpcId == npcsArray[i][1].id) {
                npcsArray[i][1].dialogue.push(dialogue);
            }
@@ -111,10 +109,23 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
             setPlayer(newPlayer);
             
             setOptions([])
+
+            var updatedGameData = JSON.parse(JSON.stringify(gameData))
+            updatedGameData.locations.list.imperialPrisonShipDownstairs.map[3][7] = "1";
+            updatedGameData.npcs.list.jiub.dialogue = [];
+            updatedGameData.npcs.list.jiub.greeting = "You better do what the guards say..."
+            setGameData(updatedGameData);
+            
+            //newGameData.player.location.map[3][7] = "1";
+            //newGameData.dialogue = []
+            //newGameData.greeting = "You better do what the guards say..."
+
+            /*
             console.log(player);
             player.location.map[3][7] = "1";
             target.dialogue = []
             target.greeting = "You better do what the guards say..."
+            */
         } else { //if option does not start a quest
             setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text]);
         }

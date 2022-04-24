@@ -1,6 +1,6 @@
 import React from 'react';
 import Map from './Map'
-import {deleteCharacter, createCharacter} from '../features/characters/characterSlice'
+import {deleteCharacter, createCharacter, updateCharacter} from '../features/characters/characterSlice'
 import {useDispatch} from 'react-redux';
 import TextWindow from './TextWindow';
 import { useState } from 'react';
@@ -21,6 +21,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const [map, setMap] = useState([[[],[]],[[],[]]]);
     
     useEffect(() => {
+        console.log(characterChoice);
         var newGameData = JSON.parse(JSON.stringify(characterChoice.character));
         newGameData.player = Object.assign(new Player(), newGameData.player);
         newGameData.player.location = Object.assign(new Location(), newGameData.player.location);
@@ -130,10 +131,21 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     function saveGame() {
         var updatedCharacterChoice = JSON.parse(JSON.stringify(characterChoice));
         var updatedCharacter = JSON.parse(JSON.stringify(player));
+        /*
         dispatch(deleteCharacter(characterChoice._id));
         updatedCharacterChoice.character.player = updatedCharacter
+        updatedCharacterChoice._id = characterChoice._id
+        console.log(updatedCharacterChoice);
         setCharacterChoice(updatedCharacterChoice);
         dispatch(createCharacter(updatedCharacterChoice.character))
+        */
+       var test = characterChoice._id
+       var test2 = updatedCharacterChoice.character
+       test2.player = updatedCharacter;
+       updatedCharacterChoice.character.player = updatedCharacter
+       setCharacterChoice(updatedCharacterChoice);
+       console.log(updatedCharacterChoice.character);
+       dispatch(updateCharacter([characterChoice._id, updatedCharacterChoice.character]));
     }
 
     return (

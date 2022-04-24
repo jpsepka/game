@@ -34,7 +34,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
 
     function getNewCoords(newLocation) {
         var newCoords = [];
-        console.log(newLocation);
         for (var i = 0; i < newLocation.doors.length; i++) {
             if (newLocation.doors[i].newZoneId == player.location.id) {
                 newCoords[0] = newLocation.doors[i].coords[0]
@@ -61,8 +60,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
     }
 
     function getZone(oldZone, coords) {
-        console.log(oldZone);
-        console.log(coords);
         var door = 0;
         var newZone = false;
         var locations = Object.values(gameData.locations);
@@ -71,7 +68,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
             if ((oldZone.doors[i].coords[0] == coords[0]) &&
                  oldZone.doors[i].coords[1] == coords[1]) {
                 door = i;
-                console.log(door);
             }
         }
 
@@ -82,7 +78,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
                 }
             }
             newZone = Object.assign(new Location(), newZone);
-            console.log(newZone);
             return newZone;
         } else (
             alert("That door is locked!")
@@ -100,7 +95,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
                     setMap(newLocation.map);
                     setLocation(newLocation);
                 } else {
-                    console.log("hi");
                     undoMove(key);
                 }
             break;
@@ -234,9 +228,6 @@ const MapTile = ({tile, rowId, tileId, gameData, getNpcByLocation}) => {
             var npc = false;
             npc = getNpcByLocation(gameData.player.location, [rowId, tileId])
             if (npc.name != undefined) {
-                console.log("hi");
-                console.log(npc.race.color);
-                console.log(npc);
                 setStyle(npc.race.color)
             } else {
                 if (gameData.player.race != "Race") {

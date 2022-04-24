@@ -15,7 +15,6 @@ export const createCharacter = createAsyncThunk(
   async (characterData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      console.log(characterData);
       return await characterService.createCharacter(characterData, token)
     } catch (error) {
       const message =
@@ -67,6 +66,26 @@ export const deleteCharacter = createAsyncThunk(
   }
 )
 
+export const updateCharacter = createAsyncThunk(
+  "characters/update",
+  async (character, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await characterService.updateCharacter(character, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+
 export const characterSlice = createSlice({
   name: 'character',
   initialState,
@@ -116,6 +135,28 @@ export const characterSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
+      .addCase(updateCharacter.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCharacter.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        var test = action.payload.id
+        for(var i = 0; i < state.characters.length; i++) {
+          console.log(state.characters[i]._id)
+          console.log(action.payload._id)
+          if (state.characters[i]._id === action.payload._id) {
+            console.log("hi");
+            state.characters[i] = action.payload
+          }
+        }
+      })
+      .addCase(updateCharacter.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      });
+
   },
 })
 

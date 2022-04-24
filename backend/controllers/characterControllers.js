@@ -32,7 +32,6 @@ const setCharacter = ayncHandler(async (req, res) => {
 //@access private
 const updateCharacter = ayncHandler(async (req, res) => {
     const character = await Character.findById(req.params.id)
-
     if(!character) {
         res.status(400)
         throw new Error("character not found")
@@ -49,9 +48,10 @@ const updateCharacter = ayncHandler(async (req, res) => {
         res.status(401)
         throw new Error('User not authorized')
     }
-
-    const updatedCharacter = await Character.findByIdAndUpdate(req.params.id, req.body, {new: true})
-
+    var test = {
+        character: req.body
+    }
+    const updatedCharacter = await Character.findByIdAndUpdate(req.params.id, test, {new: true})
     res.status(200).json(updatedCharacter)
 })
 //@desc delete characters

@@ -46,12 +46,10 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             default:
                 console.log("updateGameData default switch case - ERROR")
         }
-        console.log(newGameData);
         setGameData(newGameData);
     }
 
     function click(person) {
-        console.log(person);
         setOptions([])
         setTarget(person);
 
@@ -195,7 +193,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                     setPlayer={setPlayer} 
                     player={player}
                     gameData={gameData}
-                    updateGameData={updateGameData}
                     setGameData={setGameData}
         />
           : <></>}

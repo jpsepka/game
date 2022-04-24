@@ -1,11 +1,11 @@
 import doors from "./GameObjects/Door";
 
 class Location {
-    constructor(id, name, indoors, door, map, npcs) {
+    constructor(id, name, indoors, doors, map, npcs) {
         this.id = id;
         this.name = name;
         this.indoors = indoors;
-        this.door = door;
+        this.doors = doors;
         this.map = map;
         this.npcs = npcs;
     }
@@ -15,14 +15,26 @@ class Location {
             this.map[i] = Array.from(this.map[i]);
         }
 
-        for (var i = 0; i < this.door.length; i++) {
-            this.map[this.door[i].coords[0]][this.door[i].coords[1]] = this.door[i].icon
+        for (var i = 0; i < this.doors.length; i++) {
+            this.map[this.doors[i].coords[0]][this.doors[i].coords[1]] = this.doors[i].icon
         }
     }
 
     setMap(updatedMap) {
         console.log("hi");
         this.map = updatedMap
+    }
+
+    getDoor(coords) {
+        var door = 0;
+        for (var i = 0; i < this.doors.length; i++) {
+            if (coords[0] == this.doors[i].coords[0]) {
+                if (coords[1] == this.doors[i].coords[1]) {
+                    door = this.doors[i];
+                }
+            } 
+        }
+        return door;
     }
 }
 
@@ -73,28 +85,28 @@ var censusAndExciseOfficeMap = ["   __       |=|______                    ",
 
 
 var imperialPrisonShipDownstairs = new Location(0, "Imperial Prison Ship - Prisoner Level", 
-true, [doors.list.shipJiubRoom, doors.list.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1])
+true, [doors.shipJiubRoom, doors.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1])
 
 var imperialPrisonShip = new Location(1, "Imperial Prison Ship - Below Deck", 
-true, [doors.list.shipUpstairsToDown, doors.list.shipUpstairsToDeck], imperialPrisonShipMap, [])
+true, [doors.shipUpstairsToDown, doors.shipUpstairsToDeck], imperialPrisonShipMap, [])
 
 var imperialPrisonShipAboveDeck = new Location(2, "Imperial Prison Ship - Above Deck", 
-false, [doors.list.shipDeckToUpstairs, doors.list.shipToExciseOffice], imperialPrisonShipAboveDeckMap, []);
+false, [doors.shipDeckToUpstairs, doors.shipToExciseOffice], imperialPrisonShipAboveDeckMap, []);
 
 var censusAndExciseOffice = new Location(3, "Census and Excise Office", 
-true, [doors.list.exciseOfficeToShip], censusAndExciseOfficeMap, []);
+true, [doors.exciseOfficeToShip], censusAndExciseOfficeMap, []);
 
 imperialPrisonShipDownstairs.initializeMap();
 imperialPrisonShip.initializeMap();
 imperialPrisonShipAboveDeck.initializeMap();
 censusAndExciseOffice.initializeMap();
 
-var locations = [
+var locations = {
         imperialPrisonShipDownstairs,
         imperialPrisonShip,
         imperialPrisonShipAboveDeck,
         censusAndExciseOffice
-]
+}
 
 export {Location}
 export default locations

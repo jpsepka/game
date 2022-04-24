@@ -6,6 +6,12 @@ class Door {
         this.locked = locked;
         this.lockLevel = lockLevel;
     }
+
+    openClosedDoor() {
+        this.icon = "1"
+        this.locked = false;
+        this.lockLevel = -1
+    }
 }
 
 var shipJiubRoom = new Door("0", [3,7], -1, true, 100);
@@ -17,15 +23,13 @@ var shipToExciseOffice = new Door("=", [6, 15], 3, false, -1);
 var exciseOfficeToShip = new Door("=", [9, 33], 2, true, 100);
 
 var doors = {
-    list: {
-        shipJiubRoom, 
-        shipDownStairsToUp, 
-        shipUpstairsToDown, 
-        shipUpstairsToDeck,
-        shipDeckToUpstairs,
-        shipToExciseOffice,
-        exciseOfficeToShip
-    }
+    shipJiubRoom, 
+    shipDownStairsToUp, 
+    shipUpstairsToDown, 
+    shipUpstairsToDeck,
+    shipDeckToUpstairs,
+    shipToExciseOffice,
+    exciseOfficeToShip
 }
 
 

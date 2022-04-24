@@ -3,14 +3,13 @@ import { NPC } from "../data/Characters/NPC";
 import { Location } from "../data/Location/Location";
 
 function Map({click, setText, setOptions, setTarget, map, setMap, player, setPlayer,
-                gameData }) {
+                gameData, setGameData }) {
 
     const [translate, setTranslate] = useState({transform: 'translateX('+(player.coords[1]*-1)+'ch) translateY('+(player.coords[0]*-1)+'em)'})
     const [location, setLocation] = useState('');
 
     useEffect(() => {
         function handleMovement(e) {
-            console.log(gameData);
             if ((e.keyCode >= 37) && e.keyCode <= 40) {
                 var updatedPlayer = player;
                 updatedPlayer.coords = move(e.keyCode)
@@ -35,10 +34,11 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
 
     function getNewCoords(newLocation) {
         var newCoords = [];
-        for (var i = 0; i < newLocation.door.length; i++) {
-            if (newLocation.door[i].newZoneId == player.location.id) {
-                newCoords[0] = newLocation.door[i].coords[0]
-                newCoords[1] = newLocation.door[i].coords[1]
+        console.log(newLocation);
+        for (var i = 0; i < newLocation.doors.length; i++) {
+            if (newLocation.doors[i].newZoneId == player.location.id) {
+                newCoords[0] = newLocation.doors[i].coords[0]
+                newCoords[1] = newLocation.doors[i].coords[1]
             }
         }
         return newCoords
@@ -46,12 +46,13 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
 
     function getNpcByLocation(location, coords) {
         var npc = '';
-        var listOfNpcs = Object.entries(gameData.npcs.list);
+        var listOfNpcs = Object.values(gameData.npcs.list);
         for (var i = 0; i < listOfNpcs.length; i++) {
-            if (listOfNpcs[i][1].location.id == location.id) {
-                if ((listOfNpcs[i][1].coords[0] == coords[0]) && 
-                    (listOfNpcs[i][1].coords[1] == coords[1])) {
-                    npc = listOfNpcs[i][1]
+
+            if (listOfNpcs[i].location.id == location.id) {
+                if ((listOfNpcs[i].coords[0] == coords[0]) && 
+                    (listOfNpcs[i].coords[1] == coords[1])) {
+                    npc = listOfNpcs[i]
                 }
             }
         }
@@ -60,41 +61,53 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
     }
 
     function getZone(oldZone, coords) {
+        console.log(oldZone);
+        console.log(coords);
         var door = 0;
-        var locationsArray = Object.entries(gameData.locations.list);
         var newZone = false;
+        var locations = Object.values(gameData.locations);
 
-        for (var i = 0; i < oldZone.door.length; i++) {
-            if ((oldZone.door[i].coords[0] == coords[0]) &&
-                 oldZone.door[i].coords[1] == coords[1]) {
-                door = oldZone.door[i];
+        for (var i = 0; i < oldZone.doors.length; i++) {
+            if ((oldZone.doors[i].coords[0] == coords[0]) &&
+                 oldZone.doors[i].coords[1] == coords[1]) {
+                door = i;
+                console.log(door);
             }
         }
 
-        if (!oldZone.door.locked) {
-            for (var j = 0; j < locationsArray.length; j++) {
-                if (door.newZoneId == locationsArray[j][1].id) {
-                        newZone = locationsArray[j][1]
+        if (!oldZone.doors[door].locked) {
+            for (var j = 0; j < locations.length; j++) {
+                if (oldZone.doors[door].newZoneId == locations[j].id) {
+                        newZone = locations[j]
                 }
             }
-        }
-        newZone = Object.assign(new Location(), newZone);
-        return newZone;
+            newZone = Object.assign(new Location(), newZone);
+            console.log(newZone);
+            return newZone;
+        } else (
+            alert("That door is locked!")
+        )
     }
 
     function updateMap(key, updatedPlayer) {
         if (true) {
             switch(map[player.coords[0]][player.coords[1]]) {
             case "=":
-                var newLocation = getZone(player.location, player.coords)
-                updatedPlayer.coords = getNewCoords(newLocation);
-                updatedPlayer.location = newLocation;
-                setMap(newLocation.map);
-                setLocation(newLocation);
+                var newLocation = getZone(gameData.player.location, player.coords)
+                if (newLocation) { 
+                    updatedPlayer.coords = getNewCoords(newLocation);
+                    updatedPlayer.location = newLocation;
+                    setMap(newLocation.map);
+                    setLocation(newLocation);
+                } else {
+                    console.log("hi");
+                    undoMove(key);
+                }
             break;
             case "1":
             case " ":
             case ".":
+            case "0":
                 setTranslate({transform: 'translateX('+(player.coords[1]*-1)+'ch) translateY('+(player.coords[0]*-1)+'em)'})
                 setTarget(false)
                 player.target = "";
@@ -106,21 +119,25 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
             case "@":
                 click(getNpcByLocation(player.location, player.coords))
             default:
-                if (key == 40) {
-                    key = 38;
-                } else if (key == 38) {
-                    key = 40;
-                } else if (key == 37) {
-                    key = 39;
-                } else if (key == 39) {
-                    key = 37;
-                }
-                if (key !== 0) {
-                    move(key)
-                }
+                undoMove(key);
             break;
             }
             setPlayer(updatedPlayer)
+        }
+    }
+
+    function undoMove(key) {
+        if (key == 40) {
+            key = 38;
+        } else if (key == 38) {
+            key = 40;
+        } else if (key == 37) {
+            key = 39;
+        } else if (key == 39) {
+            key = 37;
+        }
+        if (key !== 0) {
+            move(key)
         }
     }
 
@@ -177,8 +194,11 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
             {
                 map.map((row, rowId) => {
                     return (
-                        <MapRow
-                            row={row} rowId={rowId} key={"row"+rowId}
+                        <MapRow row={row} 
+                                rowId={rowId} 
+                                key={"row"+rowId}
+                                gameData={gameData}
+                                getNpcByLocation={getNpcByLocation}
                         />
                     )
                 })
@@ -187,14 +207,18 @@ function Map({click, setText, setOptions, setTarget, map, setMap, player, setPla
     )
 }
 
-const MapRow = ({row, rowId}) => {
+const MapRow = ({row, rowId, gameData,getNpcByLocation}) => {
     return (
         <div id={"row" + rowId} key={"row" + rowId} className='row'>
             {
                 row.map((tile, tileId) => {
                     return (
-                        <MapTile
-                            tile={tile} rowId={rowId} tileId={tileId} key={rowId + "," + tileId}
+                        <MapTile tile={tile} 
+                                 rowId={rowId} 
+                                 tileId={tileId} 
+                                 key={rowId + "," + tileId}
+                                 gameData={gameData}
+                                 getNpcByLocation={getNpcByLocation}
                         />
                     )
                 })
@@ -203,9 +227,28 @@ const MapRow = ({row, rowId}) => {
     )
 }
 
-const MapTile = ({tile, rowId, tileId}) => {
+const MapTile = ({tile, rowId, tileId, gameData, getNpcByLocation}) => {
+    const [style, setStyle] = useState({color: "white"})
+    useEffect(() => {
+        if (tile == "@") {
+            var npc = false;
+            npc = getNpcByLocation(gameData.player.location, [rowId, tileId])
+            if (npc.name != undefined) {
+                console.log("hi");
+                console.log(npc.race.color);
+                console.log(npc);
+                setStyle(npc.race.color)
+            } else {
+                if (gameData.player.race != "Race") {
+                    setStyle(gameData.player.race.color)
+                }
+            }
+        } else {
+            setStyle({color: "white"})
+        }
+    }, [tile])
     return (
-        <div id={rowId + "," + tileId}>
+        <div style={style} id={rowId + "," + tileId}>
             {tile}
         </div>
     )

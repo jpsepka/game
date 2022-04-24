@@ -8,12 +8,7 @@ import Header from './components/Header';
 import CharacterRaceSheet from './components/CharacterRaceSheet';
 
 function App() {
-  /*
-  if(true) {
-    return <CharacterRaceSheet/>
-  }
-  */
-
+  
   return (
     <>
       <Router>

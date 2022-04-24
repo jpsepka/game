@@ -1,5 +1,4 @@
-import EquippableItem from './EquippableItem'
-import skills from '../Skills/Skill'
+/*
 
 class Weapon extends EquippableItem {
     constructor(name, stackable, value, type, stats, buff, dmg) {
@@ -43,3 +42,4 @@ var weapons = {
 
 
 export default weapons;
+*/

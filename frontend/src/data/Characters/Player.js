@@ -145,7 +145,7 @@ class Player extends Person {
 //[10, 10], [10, 10], [10, 10], 1, [["hearthstone", 1], ["butt", 2]], [], [0, 100], 
 //0, [0], 0, [1,1], [], "@", []);
 
-var player = new Player([2,4], "Name", "Race", locations[0], 
+var player = new Player([2,4], "Name", "Race", locations.imperialPrisonShipDownstairs, 
 [], [1,1,1,1,1], [0,0], [0,0], [0,0], 1, [], [], [0,100], 0, [], 
 0, [], "@");
 

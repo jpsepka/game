@@ -1,21 +1,38 @@
 import React from 'react';
+import { useState } from 'react';
+import races from '../data/Race/Race'
 
 function CharacterRaceSheet() {
+    const [raceChoice, setRaceChoice] = useState(false);
+    const raceList = Object.values(races);
+    const [gender, setGender] = useState(false);
+    console.log(raceList);
+
     return (
         <div className="container mainGoldBoxOutline raceBox">
             <div className="row">
                 <div className="col-md-6">
                     Appearance
-                    <div className="goldBoxOutline appearanceBox">
-                        @
+                    <div style={raceChoice.color} className="goldBoxOutline appearanceBox">
+                        {raceChoice ? (
+                            <>
+                            @
+                            </>
+                        ) : (
+                            <>
+                            </>
+                        )}
                     </div>
                     <div className="row text-center">
                         <div className="col-md-2">
-                            <button>Back</button>
+                            <button onClick={() => setGender(!gender)}>Back</button>
                         </div>
-                        <div className="col-md-8">M</div>
+                        {
+                        //just for show lol
+                        }
+                        <div className="col-md-8">{gender ? "M" : "F"}</div>
                         <div className="col-md-2">
-                            <button>Next</button>
+                            <button onClick={() => setGender(!gender)}>Next</button>
                         </div>
                     </div>
                 </div>
@@ -23,24 +40,11 @@ function CharacterRaceSheet() {
                     Race
                     <div className="goldBoxOutline">
                         <ul className="raceList">
-                            <li>Argonian</li>
-                            <li>Breton</li>
-                            <li>Dark Elf</li>
-                            <li>High Elf</li>
-                            <li>Imperial</li>
-                            <li>Khajit</li>
-                            <li>Nord</li>
-                            <li>Orc</li>
-                            <li>Reguard</li>
-                            <li>Wood Elf</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <br/>
-                        Specials
-                        <ul className="characterSpecials">
-                            <li>Ancestors Guardian</li>
-                            <li>Resist Fire</li>
+                            {raceList.map((race, raceId) => {
+                                return (
+                                    <li onClick={() => setRaceChoice(race)} key={raceId}>{race.name}</li>
+                                )
+                            })}
                         </ul>
                     </div>
                 </div>
@@ -48,13 +52,18 @@ function CharacterRaceSheet() {
                     Skill Bonuses
                     <div>
                         <ul className="skillBonuses">
-                            <li>Athletics 5</li>
-                            <li>Destruction 10</li>
-                            <li>Light Armor 5</li>
-                            <li>Long Blade 5</li>
-                            <li>Marksman 5</li>
-                            <li>Mysticism 5</li>
-                            <li>Short Blade 10</li>
+                            {raceChoice ? (
+                                <>
+                                {raceChoice.baseSkills.map((skill, skillId) => {
+                                    return(
+                                        <li key={skillId}>{skill[1].name} +{skill[0]}</li>
+                                    )
+                                })}
+                                </>
+                            ) : (
+                                <>
+                                </>
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -64,3 +73,14 @@ function CharacterRaceSheet() {
 }
 
 export default CharacterRaceSheet;
+
+/*
+<div>
+    <br/>
+    Specials
+    <ul className="characterSpecials">
+        <li>Ancestors Guardian</li>
+        <li>Resist Fire</li>
+    </ul>
+</div
+*/

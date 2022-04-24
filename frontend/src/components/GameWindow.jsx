@@ -1,6 +1,6 @@
 import React from 'react';
 import Map from './Map'
-import {deleteCharacter, createCharacter, updateCharacter} from '../features/characters/characterSlice'
+import {updateCharacter} from '../features/characters/characterSlice'
 import {useDispatch} from 'react-redux';
 import TextWindow from './TextWindow';
 import { useState } from 'react';
@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 
 function GameWindow({ characterChoice, setCharacterChoice }) {
     const [gameData, setGameData] = useState(characterChoice.character);
-    const [player, setPlayer] = useState(characterChoice.character.player)
     const [target, setTarget] = useState(false);
     const [text, setText] = useState([])
     const [options, setOptions] = useState([])
@@ -21,20 +20,13 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const [map, setMap] = useState([[[],[]],[[],[]]]);
     
     useEffect(() => {
-        console.log(characterChoice);
+        console.log(characterChoice.character.player);
         var newGameData = JSON.parse(JSON.stringify(characterChoice.character));
         newGameData.player = Object.assign(new Player(), newGameData.player);
         newGameData.player.location = Object.assign(new Location(), newGameData.player.location);
         
 
         setGameData(newGameData);
-        /*
-        var player = JSON.parse(JSON.stringify(characterChoice.character.player));
-        var location = player.location;
-        location = Object.assign(new Location(), location);
-        player.location = location;
-        */
-        setPlayer(newGameData.player);
         setMap(newGameData.player.location.map);
     }, [characterChoice])
 
@@ -57,14 +49,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         var newPlayer = JSON.parse(JSON.stringify(gameData.player))
         newPlayer.target = person;
         updateGameData(newPlayer, 'player')
-
-        /*
-        var newGameData = JSON.parse(JSON.stringify(gameData))
-        console.log(newGameData);
-        console.log(newGameData.player);
-        newGameData.player.target = person;
-        setGameData(newGameData);
-        */
 
         setText([person.greeting]);
         person.sortDialogue();
@@ -130,22 +114,12 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
      
     function saveGame() {
         var updatedCharacterChoice = JSON.parse(JSON.stringify(characterChoice));
-        var updatedCharacter = JSON.parse(JSON.stringify(player));
-        /*
-        dispatch(deleteCharacter(characterChoice._id));
-        updatedCharacterChoice.character.player = updatedCharacter
-        updatedCharacterChoice._id = characterChoice._id
+        updatedCharacterChoice.character.player = gameData.player
+        updatedCharacterChoice.character.npcs = gameData.npcs;
+
         console.log(updatedCharacterChoice);
         setCharacterChoice(updatedCharacterChoice);
-        dispatch(createCharacter(updatedCharacterChoice.character))
-        */
-       var test = characterChoice._id
-       var test2 = updatedCharacterChoice.character
-       test2.player = updatedCharacter;
-       updatedCharacterChoice.character.player = updatedCharacter
-       setCharacterChoice(updatedCharacterChoice);
-       console.log(updatedCharacterChoice.character);
-       dispatch(updateCharacter([characterChoice._id, updatedCharacterChoice.character]));
+        dispatch(updateCharacter([characterChoice._id, updatedCharacterChoice.character]));
     }
 
     return (
@@ -173,8 +147,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                          setTarget={setTarget} 
                          map={map} 
                          setMap={setMap} 
-                         player={player} 
-                         setPlayer={setPlayer}
                          gameData={gameData}
                          setGameData={setGameData}/>
                 </div>
@@ -185,7 +157,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                     <br/>
                     <button onClick={() => saveGame()}>Save</button>
                     <br/>
-                    Name: {player.name}
+                    Name: {gameData.player.name}
                 </div>
             </div>
         </div>
@@ -201,9 +173,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                     setText={setText}   
                     setQuestLog={setQuestLog} 
                     handleQuestItems={handleQuestItems} 
-                    characterChoice={characterChoice} 
-                    setPlayer={setPlayer} 
-                    player={player}
+                    characterChoice={characterChoice}
                     gameData={gameData}
                     setGameData={setGameData}
         />

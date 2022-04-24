@@ -16,7 +16,6 @@ function Dashboard() {
     const { characters, isLoading, isError, message } = useSelector(
       (state) => state.characters
     )
-    console.log(characters);
   
     useEffect(() => {
       if (isError) {

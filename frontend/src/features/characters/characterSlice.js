@@ -143,10 +143,7 @@ export const characterSlice = createSlice({
         state.isSuccess = true;
         var test = action.payload.id
         for(var i = 0; i < state.characters.length; i++) {
-          console.log(state.characters[i]._id)
-          console.log(action.payload._id)
           if (state.characters[i]._id === action.payload._id) {
-            console.log("hi");
             state.characters[i] = action.payload
           }
         }

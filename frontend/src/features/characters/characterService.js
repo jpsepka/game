@@ -9,8 +9,8 @@ const createCharacter = async (characterData, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  console.log(characterData);
   const response = await axios.post(API_URL, characterData, config)
+  
   return response.data
 }
 

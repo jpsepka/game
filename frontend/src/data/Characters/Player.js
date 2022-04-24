@@ -132,20 +132,13 @@ class Player extends Person {
         document.getElementById("npcName").innerHTML = npc.name;
         document.getElementById("npcTextBox").innerHTML = npc.dialogue[0];
     }
-
-    promptName() {
-        this.name = "player"
-        while (this.name == "player") {
-            this.name = prompt("What's your name?")
-        }
-    }
 }
 
 //var player = new Player([2, 4], "player", "Dark Elf", 0, [0], [1, 1, 1, 1, 1], 
 //[10, 10], [10, 10], [10, 10], 1, [["hearthstone", 1], ["butt", 2]], [], [0, 100], 
 //0, [0], 0, [1,1], [], "@", []);
 
-var player = new Player([2,4], "Name", "Race", locations.imperialPrisonShipDownstairs, 
+var player = new Player([2,4], " ", "Race", locations.imperialPrisonShipDownstairs, 
 [], [1,1,1,1,1], [0,0], [0,0], [0,0], 1, [], [], [0,100], 0, [], 
 0, [], "@");
 

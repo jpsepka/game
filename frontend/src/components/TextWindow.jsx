@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 
 function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted, 
     checkQuestComplete, questLog, options, text, target, setText, setQuestLog, 
-    handleQuestItems, setPlayer, player, gameData, setGameData }) {
+    handleQuestItems, gameData, setGameData }) {
     
     var notarget = true;
     const [getUserInput, setGetUserInput] = useState(false);
@@ -102,29 +102,16 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
         } else if (target.dialogue[choice].id == 1) { //if option is for a special event
             var option = target.dialogue[choice].option;
             var text = target.dialogue[choice].text;
-            setText(old => [...old, option, text]);
-
-
-            var newPlayer = player;
-            newPlayer.promptName();
-            setPlayer(newPlayer);
-            
+            setText(old => [...old, option, text]);            
             setOptions([])
 
-            console.log(player);
-            player.location.map[3][7] = "1";
-            target.dialogue = []
-            target.greeting = "You better do what the guards say..."
-            
-            /*
             var updatedGameData = JSON.parse(JSON.stringify(gameData))
-            updatedGameData.locations[0].map[3][7] = "1";
-            updatedGameData.player.location = updatedGameData.locations[0];
+            updatedGameData.player.name = prompt("What is your name?")
+            updatedGameData.locations.imperialPrisonShipDownstairs.map[3][7] = "1";
+            updatedGameData.player.location = updatedGameData.locations.imperialPrisonShipDownstairs
+            updatedGameData.npcs.list.jiub.greeting = "You better do what they say...";
             updatedGameData.npcs.list.jiub.dialogue = [];
-            updatedGameData.npcs.list.jiub.greeting = "You better do what the guards say..."
-            console.log(updatedGameData);
             setGameData(updatedGameData);
-            */
         } else { //if option does not start a quest
             setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text]);
         }

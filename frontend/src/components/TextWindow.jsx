@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 
 function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted, 
     checkQuestComplete, questLog, options, text, target, setText, setQuestLog, 
-    handleQuestItems, gameData, setGameData }) {
+    handleQuestItems, gameData, setGameData, setGettingRace, handleQuestItemHandIn }) {
     
     var notarget = true;
     const [getUserInput, setGetUserInput] = useState(false);
@@ -58,6 +58,7 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
 
     function handleOptionClick(choice) {
         if (target.dialogue[choice].quest != -1) { //if option starts a quest
+            console.log("option starts a quest")
             var questPick = target.dialogue[choice].quest;
             var inQuestLog = false;
             for (var i = 0; i < questLog.length; i++) {
@@ -65,15 +66,18 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
                     inQuestLog = true;
                 }
             }
-
             if (inQuestLog) { //if in quest log
+                console.log("in quest log");
                 if (checkQuestComplete(questPick)) { //if quest is complete
+                    console.log("quest is complete");
                     if (checkQuestReceiver(questPick)) { //if talking to the receiver
+                        console.log("talking to the receiver");
                         setText(old => [...old, target.dialogue[choice].option, questPick.complete])
                         setQuestsCompleted(old => [...old, questPick])
                         setQuestLog(questLog.filter((quest) => quest !== questPick))
                     }
                     if (questPick.followup >= 0) { //if there is a followup quest
+                        console.log("quest has a followup")
                         var followUpDialogue = getFollowUpDialogue(questPick);
                         target.dialogue.push(followUpDialogue)
                         target.sortDialogue();
@@ -85,21 +89,33 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
                         updateFollowUpNpcDialogue(followUpDialogue);
                     }
                 } else { //if quest is not complete
+                    console.log("quest is not complete")
                     setText(old => [...old, target.dialogue[choice].option, questPick.reminder]);
                 }
             } else if (!inQuestLog) { //if not in quest log
                 if (checkIfQuestComplete(questPick)) { //if not in quest log but previously completed
+                    console.log("quest not in log but previously completed");
                     setText(old => [...old, target.dialogue[choice].option, questPick.afterText])
-                } else { //if not in quest log and not previously completed
+                } else if (checkQuestComplete(questPick)) {//if not in quest log but meet criteria
+                    console.log("quest not in log but meets criteria")
+                    setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text])
+                    setGetUserInput(true);
+                    setChoices([...questPick.alreadyCompleted, ...questPick.choices])
+                    setQuest(questPick);
+                    
+                } else { //if not in quest log, don't meet criteria, and not previously completed
+                    console.log("quest not in log, don't meet criteria, and not previously completed")
                     setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text]);
                     if (target.dialogue[choice].choices.length > 0) { //if requires user input
+                        console.log("requires user input")
                         setGetUserInput(true);
                         setChoices(target.dialogue[choice].choices)
                         setQuest(questPick);
                     }
                 }
             }
-        } else if (target.dialogue[choice].id == 1) { //if option is for a special event
+        } else if (target.dialogue[choice].id == 0) { //if option is for character name event
+            console.log("option is for character name event")
             var option = target.dialogue[choice].option;
             var text = target.dialogue[choice].text;
             setText(old => [...old, option, text]);            
@@ -112,18 +128,27 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
             updatedGameData.npcs.list.jiub.greeting = "You better do what they say...";
             updatedGameData.npcs.list.jiub.dialogue = [];
             setGameData(updatedGameData);
+        } else if (target.dialogue[choice].id == 1) {//if option is for character race choice
+            console.log("option is for character race event")
+            setGettingRace(true);
         } else { //if option does not start a quest
+            console.log("option does not start a quest")
             setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text]);
         }
     }
 
     function handleTextChoice(choiceId) {
-        if (choiceId == 0) { //if quest is accepted
-            if (quest.items != -1) { //if accepted quest gives items
-                handleQuestItems(quest);
+        if (choiceId == 0) { //if accepting
+            if (checkQuestComplete(quest)) { //if quest is already complete
+                handleQuestItemHandIn(quest);
+                setText(old => [...old, quest.complete[1], quest.complete[0]])
+            } else { //if quest criteria is not completed
+                if (quest.items != -1) { //if accepted quest gives items
+                    handleQuestItems(quest);
+                }
+                setQuestLog(old => [...old, quest])
+                setText(old => [...old, quest.acceptQuestText])
             }
-            setQuestLog(old => [...old, quest])
-            setText(old => [...old, quest.acceptQuestText])
         } else if (choiceId == 1) { //if quest is declined
             setText(old => [...old, quest.declineQuestText])
         }
@@ -133,8 +158,8 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
     
     return (
         <div className="container-fluid text">
-            <p className="npcNameBox text-center">
-                <span className="npcName">{!notarget ? target.name : (" ")}</span>
+            <p className="headerBox text-center">
+                <span className="headerText">{!notarget ? target.name : (" ")}</span>
             </p>
             <div className="col-sm-10 npcTextBox goldBoxOutline">
             {!notarget ? text.map((line, id) => (
@@ -152,9 +177,9 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
                 <ul>
                 <div className="npcTextOptions">{!notarget ? options.map((option, id) => (
                     <>
-                        <p><a id={id} onClick={()=> {
+                        <p id={id} onClick={()=> {
                             handleOptionClick(id)
-                        }}>{option}</a></p>
+                        }}>{option}</p>
                     </>
                 )) : " "}</div>
                 </ul>

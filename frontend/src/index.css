@@ -114,6 +114,58 @@ h3 {
   background: none;
 }
 
+.confirmRace {
+  position:absolute;
+  left: 450px;
+}
+
+.hoverable {
+  position: relative;
+}
+
+.hoverable>.hoverable_tooltip {
+  display: none;
+}
+
+.hoverable:hover>.hoverable_tooltip {
+  display: flex;
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  background: black;
+  text-align: center;
+  width: max-content;
+  font-size: 15px;
+}
+
+.genderConfirmA {
+  position: absolute;
+  left:50px;
+}
+
+.genderConfirmText {
+  width: 100%
+}
+
+.genderConfirmB {
+  position: absolute;
+  right: 50px;
+  bottom: -1px
+}
+
+.col-lg-9 {
+  padding: 0px;
+}
+
+.morrowindTextButton {
+  cursor: pointer;
+  border: none;
+  border: 1px solid rgb(188,162,117);
+  background: none;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .form,
 .content {
   width: 70%;
@@ -249,7 +301,6 @@ html, body {
 
 .mainGoldBoxOutline {
   border: 5px solid rgb(188,162,117);
-  height: 100cm;
 }
 
 .goldBoxOutline {
@@ -260,9 +311,10 @@ html, body {
   font-size: 5em;
   width: 5em;
   height: 5em;
+  margin-bottom: 10px;
   padding-top: 1.5em;
   text-align: center;
-  
+  color: white;
 }
 
 .skillBonuses {
@@ -286,6 +338,10 @@ html, body {
 }
 
 a {
+  color: red;
+}
+
+.morrowindColorText {
   color: #F0E68C;
 }
 
@@ -298,7 +354,40 @@ a {
   height: 150px;
 }
 
-.npcName {
+.col-sm-5 {
+  padding: 0;
+}
+
+.col-sm-7 {
+  padding: 0;
+  width: 58.336%
+}
+
+.col-sm-12 {
+  padding: 0;
+}
+
+.charSheetSection {
+  height: 300px;
+}
+
+.smallMap {
+  font-size: 5.2px;
+  padding: 0;
+  margin: 0;
+  margin-top: -10px;
+}
+
+.inventory {
+  padding: 10px;
+  text-align: left;
+  height: 245px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 2em;
+}
+
+.headerText {
   background-color: black;
   padding-left: 5px;
   padding-right: 5px;
@@ -306,7 +395,7 @@ a {
   padding-bottom: 3px;
 }
 
-.npcNameBox {
+.headerBox {
   background-color: rgb(188,162,117);;
 }
 
@@ -369,7 +458,7 @@ pre {
 
 .row {
     height: 100%;
-    display: flex;
+    display: block;
     flex-direction: row;
     font-family: monospace;
 }
@@ -380,6 +469,8 @@ pre {
     margin: 8px auto 0px;
     overflow: hidden;
     border-style: dashed;
+    margin-right:40px;
+    margin-left:35px;
 }
 
 .map {

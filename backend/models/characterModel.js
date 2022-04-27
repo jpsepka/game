@@ -30,6 +30,10 @@ const characterSchema = mongoose.Schema({
         questList: {
             type: Object,
             required: [true, "wtf"]
+        },
+        races: {
+            type: Object,
+            required: [true, "huh?"]
         }
     }
 }, {

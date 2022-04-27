@@ -8,6 +8,9 @@ import {Player} from '../data/Characters/Player'
 import {Location} from '../data/Location/Location'
 import {NPC} from '../data/Characters/NPC'
 import { useEffect } from 'react';
+import CharacterRaceSheet from './CharacterRaceSheet';
+import CharacterSheet from './CharacterSheet';
+import TradeMenu from './TradeMenu';
 
 function GameWindow({ characterChoice, setCharacterChoice }) {
     const [gameData, setGameData] = useState(characterChoice.character);
@@ -18,9 +21,12 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const [inventory, setInventory] = useState('');
     const [questsCompleted, setQuestsCompleted] = useState('');
     const [map, setMap] = useState([[[],[]],[[],[]]]);
+    const [gettingRace, setGettingRace] = useState(false);
+    const [lookingAtInventory, setLookingAtInventory] = useState(false);
+    const [container, setContainer] = useState(false);
+    const [showTradeMenu, setShowTradeMenu] = useState(false);
     
     useEffect(() => {
-        console.log(characterChoice.character.player);
         var newGameData = JSON.parse(JSON.stringify(characterChoice.character));
         newGameData.player = Object.assign(new Player(), newGameData.player);
         newGameData.player.location = Object.assign(new Location(), newGameData.player.location);
@@ -59,18 +65,27 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         setOptions(test);
     }
 
+    function openContainer(container) {
+        setContainer(container);
+        setShowTradeMenu(true);
+
+    }
+
     function checkQuestComplete(quest) {
         var output = false;
+        var inQuestLog = gameData.player.questsCompleted.includes(quest);
         switch(quest.type) {
             case "Gather":
-            for (var i = 0; i < inventory.length; i++) {
-                if (quest.criteria[0] == inventory[i][0]) {
-                    if (quest.criteria[1] <= inventory[i][1]) {
-                        output = true
-                        handleQuestItemHandIn(quest)
+                for (var i = 0; i < gameData.player.inventory.length; i++) {
+                    if (quest.criteria[0].name === gameData.player.inventory[i][0].name) {
+                        if (quest.criteria[1] <= gameData.player.inventory[i][1]) {
+                            output = true
+                            if (inQuestLog) {
+                                handleQuestItemHandIn(quest)
+                            }
+                        }
                     }
                 }
-            }
             break;
             default:
             console.log("default switch case");
@@ -84,13 +99,19 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
 
     function handleQuestItemHandIn(quest) {
         var inventoryLocation;
-        for (var i = 0; i < inventory.length; i++) {
-        if (quest.criteria[0] == inventory[i][0]) {
-            inventoryLocation = i;
+        for (var i = 0; i < gameData.player.inventory.length; i++) {
+            if (quest.criteria[0].name === gameData.player.inventory[i][0].name) {
+                inventoryLocation = i;
+            }
         }
-        }
-        var newAmount = inventory[inventoryLocation][1] - quest.criteria[1]
-        var newInventory = inventory.filter((item) => item !== inventory[inventoryLocation])
+        var newAmount = gameData.player.inventory[inventoryLocation][1] - quest.criteria[1]
+        var newInventory = gameData.player.inventory.filter((item) => item !== gameData.player.inventory[inventoryLocation])
+        
+        var updatedGameData = gameData;
+        updatedGameData.player.inventory = newInventory;
+
+        setGameData(updatedGameData);
+
 
         if (newAmount == 0) {
         setInventory([...newInventory])
@@ -104,9 +125,9 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     function checkIfQuestComplete(quest) {
         var output = false;
         for (var i = 0; i < questsCompleted.length; i++) {
-        if (questsCompleted[i] == quest) {
-            output = true;
-        }
+            if (questsCompleted[i] == quest) {
+                output = true;
+            }
         }
         return output
     }
@@ -117,67 +138,181 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         updatedCharacterChoice.character.player = gameData.player
         updatedCharacterChoice.character.npcs = gameData.npcs;
 
-        console.log(updatedCharacterChoice);
         setCharacterChoice(updatedCharacterChoice);
         dispatch(updateCharacter([characterChoice._id, updatedCharacterChoice.character]));
     }
 
+    function submitRace(raceChoice) {
+        if (raceChoice) {
+            var updatedGameData = JSON.parse(JSON.stringify(gameData));
+            updatedGameData.player.race = raceChoice;
+            updatedGameData.player.showInventory = true;
+            setGameData(updatedGameData);
+            setGettingRace(false);
+        }
+    }
+
+    function displayInventory() {
+        setTarget('')
+        setLookingAtInventory(!lookingAtInventory)
+    }
+
+    function closeTradeMenu() {
+        setShowTradeMenu(false);
+    }
+
+    function displayNormal(gameData, container) {
+        return (
+            <>
+                {showTradeMenu 
+                ? (
+                    <div className="col-lg-9">
+                        <TradeMenu
+                            gameData={gameData}
+                            container={container}
+                        />
+                    </div>
+                )
+                :  (
+                    <>
+                        <div className="col-lg-3">
+                            <ul className="guide">
+                                Guide:
+                                <li>
+                                    @ - Character
+                                </li>
+                                <li>
+                                    = - Door to new area
+                                </li>
+                                <li>
+                                    0/1 Door - (closed/open)
+                                </li>
+                                <li>
+                                    $ - Chest
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="col-lg-6 mapContainer">
+                            <Map click={click} 
+                                setText={setText} 
+                                setOptions={setOptions} 
+                                setTarget={setTarget} 
+                                map={map} 
+                                setMap={setMap} 
+                                gameData={gameData}
+                                setGameData={setGameData}
+                                openContainer={openContainer}
+                            />
+                        </div>
+                    </>
+                )
+                }
+            </>
+        )
+    }
+
     return (
         <>
-        <div className="game">
-            <div className="row justify-content-md-center">
-                <div className="col-lg-3">
-                <ul className="guide">
-                    Guide:
-                    <li>
-                        @ - Character
-                    </li>
-                    <li>
-                        = - Door to new area
-                    </li>
-                    <li>
-                        0/1 Door - (closed/open)
-                    </li>
-                </ul>
+        {gettingRace ? <CharacterRaceSheet submitRace={submitRace} gameData={gameData}/>  :
+            <>
+                <div className="game">
+                    <div className="row justify-content-md-center">
+                        {lookingAtInventory 
+                        ? (
+                            <div className="col-lg-9">
+                                <CharacterSheet 
+                                    gameData={gameData}
+                                />
+                            </div>
+                          )
+                        : (
+                            <>
+                                {showTradeMenu 
+                                ? (
+                                    <div className="col-lg-9">
+                                        <TradeMenu
+                                            gameData={gameData}
+                                            container={container}
+                                        />
+                                    </div>
+                                )
+                                :  (
+                                    <>
+                                        <div className="col-lg-3">
+                                            <ul className="guide">
+                                                Guide:
+                                                <li>
+                                                    @ - Character
+                                                </li>
+                                                <li>
+                                                    = - Door to new area
+                                                </li>
+                                                <li>
+                                                    0/1 Door - (closed/open)
+                                                </li>
+                                                <li>
+                                                    $ - Chest
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className="col-lg-6 mapContainer">
+                                            <Map click={click} 
+                                                setText={setText} 
+                                                setOptions={setOptions} 
+                                                setTarget={setTarget} 
+                                                map={map} 
+                                                setMap={setMap} 
+                                                gameData={gameData}
+                                                setGameData={setGameData}
+                                                openContainer={openContainer}
+                                            />
+                                        </div>
+                                    </>
+                                )
+                                }
+                            </>
+                        )}
+                        {showTradeMenu
+                        ? <button onClick={() => closeTradeMenu()}>Close</button>
+                        : (
+                            <div className="col-lg-3">
+                                Main Menu:
+                                <br/>
+                                <button onClick={() => setCharacterChoice(false)}>return to character list</button>
+                                <br/>
+                                <button onClick={() => saveGame()}>Save</button>
+                                <br/>
+                                {gameData.player.showInventory
+                                ? <button onClick={() => displayInventory()}>Inventory</button>
+                                : ""
+                                }
+                            </div>
+                        )
+                        }
+                        
+                    </div>
                 </div>
-                <div className="col-lg-6 mapContainer">
-                    <Map click={click} 
-                         setText={setText} 
-                         setOptions={setOptions} 
-                         setTarget={setTarget} 
-                         map={map} 
-                         setMap={setMap} 
-                         gameData={gameData}
-                         setGameData={setGameData}/>
-                </div>
-                <div className="col-lg-3">
-                    Main Menu:
-                    <br/>
-                    <button onClick={() => setCharacterChoice(false)}>return to character list</button>
-                    <br/>
-                    <button onClick={() => saveGame()}>Save</button>
-                    <br/>
-                    Name: {gameData.player.name}
-                </div>
-            </div>
-        </div>
-        {target ? 
-        <TextWindow setOptions={setOptions} 
-                    checkIfQuestComplete={checkIfQuestComplete} 
-                    setQuestsCompleted={setQuestsCompleted} 
-                    checkQuestComplete={checkQuestComplete} 
-                    questLog={questLog} 
-                    options={options} 
-                    text={text} 
-                    target={target} 
-                    setText={setText}   
-                    setQuestLog={setQuestLog} 
-                    handleQuestItems={handleQuestItems} 
-                    characterChoice={characterChoice}
-                    gameData={gameData}
-                    setGameData={setGameData}
-        />
-          : <></>}
+                {target 
+                ? <TextWindow setOptions={setOptions} 
+                            checkIfQuestComplete={checkIfQuestComplete} 
+                            setQuestsCompleted={setQuestsCompleted} 
+                            checkQuestComplete={checkQuestComplete} 
+                            questLog={questLog} 
+                            options={options} 
+                            text={text} 
+                            target={target} 
+                            setText={setText}   
+                            setQuestLog={setQuestLog} 
+                            handleQuestItems={handleQuestItems} 
+                            characterChoice={characterChoice}
+                            gameData={gameData}
+                            setGameData={setGameData}
+                            setGettingRace={setGettingRace}
+                            handleQuestItemHandIn={handleQuestItemHandIn}
+                />
+                : ""}
+            </>
+            }
         </>
     );
 }

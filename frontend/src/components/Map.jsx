@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { NPC } from "../data/Characters/NPC";
+import { containers } from "../data/Location/GameObjects/Container";
 import { Location } from "../data/Location/Location";
 
 function Map({click, setText, setOptions, setTarget, map, setMap,
-                gameData, setGameData }) {
+                gameData, setGameData, openContainer }) {
 
     const [translate, setTranslate] = useState({transform: 'translateX('+(gameData.player.coords[1]*-1)+'ch) translateY('+(gameData.player.coords[0]*-1)+'em)'})
     const [location, setLocation] = useState('');
 
     useEffect(() => {
         function handleMovement(e) {
+            var updatedGameData = gameData;
             if ((e.keyCode >= 37) && e.keyCode <= 40) {
-                var updatedGameData = gameData;
                 updatedGameData.player.coords = move(e.keyCode);
                 console.log(updatedGameData.player.coords);
                 updateMap(e.keyCode, updatedGameData)
@@ -26,6 +27,8 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
           document.removeEventListener("keydown", handleMovement);
         };
       });
+
+      
 
     useEffect(() => {
         setLocation(gameData.player.location.name);
@@ -58,6 +61,19 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
         return npc
     }
 
+    function getContainer(coords) {
+        var container = '';
+        var listOfContainers = gameData.player.location.containers;
+        for (var i = 0; i < listOfContainers.length; i++) {
+            if ((listOfContainers[i].coords[0] == coords[0]) && 
+                (listOfContainers[i].coords[1] == coords[1])) {
+                
+                container = listOfContainers[i];
+            }
+        }
+        return container;
+    }
+
     function getZone(oldZone, coords) {
         var door = 0;
         var newZone = false;
@@ -83,7 +99,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
         )
     }
 
-    function updateMap(key, updatedGameData /*updatedPlayer*/) {
+    function updateMap(key, updatedGameData) {
         if (true) {
             switch(map[updatedGameData.player.coords[0]][updatedGameData.player.coords[1]]) {
             case "=":
@@ -111,6 +127,10 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
             break;
             case "@":
                 click(getNpcByLocation(gameData.player.location, gameData.player.coords))
+                undoMove(key);
+            break;
+            case "$":
+                openContainer(getContainer(gameData.player.coords))
             default:
                 undoMove(key);
             break;
@@ -152,12 +172,14 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
             if (i == gameData.player.coords[0]) {
                 updatedMap[gameData.player.coords[0]][gameData.player.coords[1]] = "@";    
             }
-            for (var j = 0; j < gameData.player.location.npcs.length; j++) {
-                var npc = getNpcById(gameData.player.location.npcs[j]);
-                if (i == npc.coords[0]) {
-                updatedMap[i][npc.coords[1]] = npc.icon;
-                }
-            }
+        }
+        for (var j = 0; j < gameData.player.location.npcs.length; j++) {
+            var npc = getNpcById(gameData.player.location.npcs[j]);
+            updatedMap[npc.coords[0]][npc.coords[1]] = npc.icon;
+        }
+        for (var k = 0; k < gameData.player.location.containers.length; k++) {
+            var container = gameData.player.location.containers[k];
+            updatedMap[container.coords[0]][container.coords[1]] = container.icon
         }
         return updatedMap
     }
@@ -181,10 +203,21 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
         return newCoords
     }
 
-
     return (
         <pre style={translate} className='map text-center'>
-            {
+            {map
+            /* 
+            rendering tile by tile caused LAG in big map
+            but the dudes lose coloring without it. f :(
+            i have literally no idea how i'd go about fixing that
+            potential fixes: {  
+                1. array of line = document.createElement() for each line of map
+                    edit line innerHTML and outerHTML, add spans for characters
+                    render line by line
+                2. create component for characters, 
+                    render on top of map
+            }
+            
                 map.map((row, rowId) => {
                     return (
                         <MapRow row={row} 
@@ -195,6 +228,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
                         />
                     )
                 })
+                */
             }
         </pre>
     )
@@ -233,6 +267,8 @@ const MapTile = ({tile, rowId, tileId, gameData, getNpcByLocation}) => {
                     setStyle(gameData.player.race.color)
                 }
             }
+        } else if (tile == "?") {
+            setStyle({color: "black"})
         } else {
             setStyle({color: "white"})
         }

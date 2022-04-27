@@ -1,38 +1,39 @@
 import React from 'react';
 import { useState } from 'react';
-import races from '../data/Race/Race'
 
-function CharacterRaceSheet() {
+function CharacterRaceSheet({submitRace, gameData}) {
     const [raceChoice, setRaceChoice] = useState(false);
-    const raceList = Object.values(races);
-    const [gender, setGender] = useState(false);
-    console.log(raceList);
+    const raceList = Object.values(gameData.races);
+    const [gender, setGender] = useState(true);
 
     return (
-        <div className="container mainGoldBoxOutline raceBox">
+        <div className="container mainGoldBoxOutline morrowindColorText raceBox">
             <div className="row">
                 <div className="col-md-6">
                     Appearance
-                    <div style={raceChoice.color} className="goldBoxOutline appearanceBox">
-                        {raceChoice ? (
-                            <>
-                            @
-                            </>
-                        ) : (
-                            <>
-                            </>
-                        )}
-                    </div>
+                    {raceChoice 
+                        ? (
+                            <div style={raceChoice.color} className="goldBoxOutline appearanceBox">
+                                @
+                            </div>
+                          )
+                        : (
+                            <div className="goldBoxOutline appearanceBox">
+                                @
+                            </div>
+                          )
+                    }
                     <div className="row text-center">
-                        <div className="col-md-2">
-                            <button onClick={() => setGender(!gender)}>Back</button>
+                        <div className="genderConfirmA">
+                            <button className="morrowindTextButton morrowindColorText" onClick={() => setGender(!gender)}>Back</button>
                         </div>
                         {
-                        //just for show lol
+                        //just for show lols
                         }
-                        <div className="col-md-8">{gender ? "M" : "F"}</div>
-                        <div className="col-md-2">
-                            <button onClick={() => setGender(!gender)}>Next</button>
+                        <div className="genderConfirmText">{gender ? "M" : "F"}</div>
+                        <div className="genderConfirmB">
+                            <button className="morrowindTextButton morrowindColorText" onClick={() => setGender(!gender)}>Next</button>
+                            <button onClick={() => submitRace(raceChoice)} className="morrowindTextButton confirmRace morrowindColorText">OK</button>
                         </div>
                     </div>
                 </div>
@@ -68,6 +69,7 @@ function CharacterRaceSheet() {
                     </div>
                 </div>
             </div>
+            
         </div>
     );
 }

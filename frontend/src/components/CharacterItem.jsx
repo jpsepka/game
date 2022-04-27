@@ -9,7 +9,7 @@ function CharacterItem({setCharacterChoice, character}) {
                 {new Date(character.createdAt).toLocaleString('en-US')}
             </div>
             <h2>{character.character.player.name}</h2>
-            <h3>Level: {character.character.player.level}</h3>
+            <h3>Level {character.character.player.level} {character.character.player.race.name}</h3>
             <button onClick={() => setCharacterChoice(character)}>Play</button>
             <button onClick={() => dispatch(deleteCharacter(character._id))} className="close">X</button>
         </div>

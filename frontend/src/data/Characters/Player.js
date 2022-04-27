@@ -2,6 +2,7 @@ import Person from './Person'
 import items from '../Items/index'
 import locations from '../Location/Location'
 import factions from '../Faction/Faction'
+import races from '../Race/Race'
 
 class Player extends Person {
     constructor(coords, name, race, location, faction, stats, health, 
@@ -20,9 +21,9 @@ class Player extends Person {
     }
 }
 
-var player = new Player([15,10], "Name", "Race", locations.imperialPrisonShipAboveDeck, 
+var player = new Player([5,21], "tester", races.argonian, locations.censusAndExciseOfficeCourtyard, 
 [], [1,1,1,1,1], [0,0], [0,0], [0,0], 1, [], [], [0,100], 0, [], 
-0, [], "@", false);
+0, [], "@", true);
 
 export {Player}
 export {player};

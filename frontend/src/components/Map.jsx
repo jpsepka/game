@@ -4,7 +4,7 @@ import { containers } from "../data/Location/GameObjects/Container";
 import { Location } from "../data/Location/Location";
 
 function Map({click, setText, setOptions, setTarget, map, setMap,
-                gameData, setGameData, openContainer }) {
+                gameData, setGameData, openContainer, getContainer }) {
 
     const [translate, setTranslate] = useState({transform: 'translateX('+(gameData.player.coords[1]*-1)+'ch) translateY('+(gameData.player.coords[0]*-1)+'em)'})
     const [location, setLocation] = useState('');
@@ -59,19 +59,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
         }
         npc = Object.assign(new NPC(), npc);
         return npc
-    }
-
-    function getContainer(coords) {
-        var container = '';
-        var listOfContainers = gameData.player.location.containers;
-        for (var i = 0; i < listOfContainers.length; i++) {
-            if ((listOfContainers[i].coords[0] == coords[0]) && 
-                (listOfContainers[i].coords[1] == coords[1])) {
-                
-                container = listOfContainers[i];
-            }
-        }
-        return container;
     }
 
     function getZone(oldZone, coords) {
@@ -131,9 +118,11 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
             break;
             case "$":
                 openContainer(getContainer(gameData.player.coords))
-            default:
                 undoMove(key);
             break;
+            default:
+                console.log("default statement in update map")
+                undoMove(key);
             }
             setGameData(updatedGameData);
         }

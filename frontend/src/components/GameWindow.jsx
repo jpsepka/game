@@ -135,8 +135,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
      
     function saveGame() {
         var updatedCharacterChoice = JSON.parse(JSON.stringify(characterChoice));
-        updatedCharacterChoice.character.player = gameData.player
-        updatedCharacterChoice.character.npcs = gameData.npcs;
+        updatedCharacterChoice.character = JSON.parse(JSON.stringify(gameData));
 
         setCharacterChoice(updatedCharacterChoice);
         dispatch(updateCharacter([characterChoice._id, updatedCharacterChoice.character]));
@@ -161,59 +160,52 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         setShowTradeMenu(false);
     }
 
-    function displayNormal(gameData, container) {
-        return (
-            <>
-                {showTradeMenu 
-                ? (
-                    <div className="col-lg-9">
-                        <TradeMenu
-                            gameData={gameData}
-                            container={container}
-                        />
-                    </div>
-                )
-                :  (
-                    <>
-                        <div className="col-lg-3">
-                            <ul className="guide">
-                                Guide:
-                                <li>
-                                    @ - Character
-                                </li>
-                                <li>
-                                    = - Door to new area
-                                </li>
-                                <li>
-                                    0/1 Door - (closed/open)
-                                </li>
-                                <li>
-                                    $ - Chest
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="col-lg-6 mapContainer">
-                            <Map click={click} 
-                                setText={setText} 
-                                setOptions={setOptions} 
-                                setTarget={setTarget} 
-                                map={map} 
-                                setMap={setMap} 
-                                gameData={gameData}
-                                setGameData={setGameData}
-                                openContainer={openContainer}
-                            />
-                        </div>
-                    </>
-                )
-                }
-            </>
-        )
+    function swapItemOwner(item, owner) {
+        var locations = Object.getOwnPropertyNames(gameData.locations);
+        var playerLocation = gameData.player.location.name.replace(/\s/g, '');
+
+        for (var i = 0; i < locations.length; i++) {
+            if (locations[i].toLowerCase() === playerLocation.toLowerCase()) {
+                playerLocation = locations[i]
+            }
+        }
+        
+        var updatedGameData = JSON.parse(JSON.stringify(gameData));
+        var ownerIndex = gameData.player.location.containers.indexOf(container)
+        var itemIndex = owner.inventory.indexOf(item);
+
+        if (owner.name === container.name) {
+            updatedGameData.player.inventory.push(item)
+            updatedGameData.player.location.containers[ownerIndex].inventory.splice(itemIndex, 1)
+            updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.splice(itemIndex, 1)
+        } else if (owner.name === gameData.player.name) {
+            updatedGameData.player.location.containers[ownerIndex].inventory.push(item)
+            updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.push(item)
+            updatedGameData.player.inventory.splice(itemIndex, 1);
+        }
+        setContainer(updatedGameData.player.location.containers[ownerIndex]);
+        setGameData(updatedGameData);
+    }
+
+    function getContainer(coords) {
+        var container = '';
+        var listOfContainers = gameData.player.location.containers;
+        for (var i = 0; i < listOfContainers.length; i++) {
+            if ((listOfContainers[i].coords[0] == coords[0]) && 
+                (listOfContainers[i].coords[1] == coords[1])) {
+                
+                container = listOfContainers[i];
+            }
+        }
+        return container;
     }
 
     return (
         <>
-        {gettingRace ? <CharacterRaceSheet submitRace={submitRace} gameData={gameData}/>  :
+        {gettingRace ? <CharacterRaceSheet submitRace={submitRace} 
+                                            gameData={gameData}
+                        />  
+                     :
             <>
                 <div className="game">
                     <div className="row justify-content-md-center">
@@ -233,6 +225,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                                         <TradeMenu
                                             gameData={gameData}
                                             container={container}
+                                            swapItemOwner={swapItemOwner}
                                         />
                                     </div>
                                 )
@@ -265,6 +258,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                                                 gameData={gameData}
                                                 setGameData={setGameData}
                                                 openContainer={openContainer}
+                                                getContainer={getContainer}
                                             />
                                         </div>
                                     </>
@@ -273,7 +267,15 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                             </>
                         )}
                         {showTradeMenu
-                        ? <button onClick={() => closeTradeMenu()}>Close</button>
+                        ? (
+                        <>
+                            <button onClick={() => closeTradeMenu()}>Close</button>
+                            <br/>
+                            <button onClick={() => console.log(gameData.player.inventory)}>Print Inventory</button>
+                            <br/>
+                            <button onClick={() => console.log(container.inventory)}>container inventory</button>
+                        </>
+                        )
                         : (
                             <div className="col-lg-3">
                                 Main Menu:
@@ -282,12 +284,15 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                                 <br/>
                                 <button onClick={() => saveGame()}>Save</button>
                                 <br/>
-                                {gameData.player.showInventory
-                                ? <button onClick={() => displayInventory()}>Inventory</button>
-                                : ""
-                                }
+                                <button onClick={() => displayInventory()}>
+                                    {lookingAtInventory
+                                        ? "Close"
+                                        : "Inventory"
+                                    }
+                                </button>
+                                <br/>
                             </div>
-                        )
+                          )
                         }
                         
                     </div>

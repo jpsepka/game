@@ -1,14 +1,18 @@
 import React from 'react';
 import Item from './Item';
 
-function Inventory({gameData, owner}) {
-    console.log(owner);
-    console.log(owner.inventory.map((item) => {console.log(item)}))
+function Inventory({owner, swapItemOwner}) {
+    function swapItemHelper(item) {
+        swapItemOwner(item, owner);
+    }
     return (
         <div className='mainGoldBoxOutline charSheetSection'>
             <p className="headerBox">
                 <span className="headerText">
-                    {owner.name}
+                    {owner.name === "Chest"
+                        ? "Chest"
+                        : "Inventory"
+                    }
                 </span>
             </p>
             <div className="inventory goldBoxOutline">
@@ -17,6 +21,7 @@ function Inventory({gameData, owner}) {
                         {owner.inventory.map((item) => {
                             return (
                                     <Item item={item}
+                                        swapItemHelper={swapItemHelper}
                                     />
                             )
                         })}

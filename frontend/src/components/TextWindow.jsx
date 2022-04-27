@@ -15,6 +15,11 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
         notarget = false;
     }
 
+    useEffect(() => {
+        var textBox = document.getElementById('npcDialogueBox')
+        textBox.scrollTop = textBox.scrollHeight;
+    }, [text])
+
     function getFollowUpQuest(quest) {
         var quests = Object.entries(gameData.dialogue);
         var followUpQuest = '';
@@ -100,12 +105,14 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
                     console.log("quest not in log but meets criteria")
                     setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text])
                     setGetUserInput(true);
-                    setChoices([...questPick.alreadyCompleted, ...questPick.choices])
+                    setChoices([questPick.alreadyCompleted, questPick.decline])
                     setQuest(questPick);
-                    
                 } else { //if not in quest log, don't meet criteria, and not previously completed
                     console.log("quest not in log, don't meet criteria, and not previously completed")
                     setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text]);
+                    setGetUserInput(true);
+                    setQuest(questPick);
+                    setChoices([questPick.decline])
                     if (target.dialogue[choice].choices.length > 0) { //if requires user input
                         console.log("requires user input")
                         setGetUserInput(true);
@@ -137,8 +144,8 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
         }
     }
 
-    function handleTextChoice(choiceId) {
-        if (choiceId == 0) { //if accepting
+    function handleTextChoice(choice) {
+        if (choice.accept) { //if accepting
             if (checkQuestComplete(quest)) { //if quest is already complete
                 handleQuestItemHandIn(quest);
                 setText(old => [...old, quest.complete[1], quest.complete[0]])
@@ -149,7 +156,8 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
                 setQuestLog(old => [...old, quest])
                 setText(old => [...old, quest.acceptQuestText])
             }
-        } else if (choiceId == 1) { //if quest is declined
+        } else if (!choice.accept) { //if quest is declined
+            console.log(quest);
             setText(old => [...old, quest.declineQuestText])
         }
         setGetUserInput(false);
@@ -161,12 +169,12 @@ function TextWindow({ setOptions, checkIfQuestComplete, setQuestsCompleted,
             <p className="headerBox text-center">
                 <span className="headerText">{!notarget ? target.name : (" ")}</span>
             </p>
-            <div className="col-sm-10 npcTextBox goldBoxOutline">
+            <div id="npcDialogueBox" className="col-sm-10 npcTextBox goldBoxOutline">
             {!notarget ? text.map((line, id) => (
                 <p id={id}>{line}</p>
             )) : ""}
-            {!notarget && getUserInput ? choices.map((choice, choiceId) => (
-                <p><a onClick={()=>handleTextChoice(choiceId)}>{choice}</a></p>
+            {!notarget && getUserInput ? choices.map((choice) => (
+                <p><a onClick={()=>handleTextChoice(choice)}>{choice.text}</a></p>
             )) : ""}
             </div>
             <div className="col-sm-2">

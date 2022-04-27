@@ -1,16 +1,16 @@
 import React from 'react';
 import Inventory from './Inventory';
 
-function TradeMenu({gameData, container}) {
+function TradeMenu({gameData, container, swapItemOwner}) {
     return (
         <>
           <Inventory
-            gameData={gameData}
             owner={gameData.player}
+            swapItemOwner={swapItemOwner}
           />
           <Inventory
-            gameData={gameData}
             owner={container}
+            swapItemOwner={swapItemOwner}
           />  
         </>
     );

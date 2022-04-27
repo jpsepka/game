@@ -1,9 +1,8 @@
 import React from 'react';
 
-function Item({item}) {
-    console.log(item);
+function Item({item, swapItemHelper}) {
     return (
-        <p className="hoverable" key={item[0].name}>
+        <p onClick={() => swapItemHelper(item)} className="hoverable" key={item[0].name}>
             <span className="goldBoxOutline hoverable_tooltip">
                 {item[0].name}
                 <br/>

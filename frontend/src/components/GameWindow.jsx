@@ -9,6 +9,7 @@ import {Location} from '../data/Location/Location'
 import {NPC} from '../data/Characters/NPC'
 import { useEffect } from 'react';
 import CharacterRaceSheet from './CharacterRaceSheet';
+import CharacterClassForm from './CharacterClassForm';
 import CharacterSheet from './CharacterSheet';
 import TradeMenu from './TradeMenu';
 
@@ -22,6 +23,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const [questsCompleted, setQuestsCompleted] = useState('');
     const [map, setMap] = useState([[[],[]],[[],[]]]);
     const [gettingRace, setGettingRace] = useState(false);
+    const [gettingClass, setGettingClass] = useState(false);
     const [lookingAtInventory, setLookingAtInventory] = useState(false);
     const [container, setContainer] = useState(false);
     const [showTradeMenu, setShowTradeMenu] = useState(false);
@@ -68,21 +70,16 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     function openContainer(container) {
         setContainer(container);
         setShowTradeMenu(true);
-
     }
 
     function checkQuestComplete(quest) {
         var output = false;
-        var inQuestLog = gameData.player.questsCompleted.includes(quest);
         switch(quest.type) {
             case "Gather":
                 for (var i = 0; i < gameData.player.inventory.length; i++) {
                     if (quest.criteria[0].name === gameData.player.inventory[i][0].name) {
                         if (quest.criteria[1] <= gameData.player.inventory[i][1]) {
                             output = true
-                            if (inQuestLog) {
-                                handleQuestItemHandIn(quest)
-                            }
                         }
                     }
                 }
@@ -97,35 +94,10 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         setInventory(old => [...old, [quest.items, 1]])
     }
 
-    function handleQuestItemHandIn(quest) {
-        var inventoryLocation;
-        for (var i = 0; i < gameData.player.inventory.length; i++) {
-            if (quest.criteria[0].name === gameData.player.inventory[i][0].name) {
-                inventoryLocation = i;
-            }
-        }
-        var newAmount = gameData.player.inventory[inventoryLocation][1] - quest.criteria[1]
-        var newInventory = gameData.player.inventory.filter((item) => item !== gameData.player.inventory[inventoryLocation])
-        
-        var updatedGameData = gameData;
-        updatedGameData.player.inventory = newInventory;
-
-        setGameData(updatedGameData);
-
-
-        if (newAmount == 0) {
-        setInventory([...newInventory])
-        } else {
-        var newItem = inventory[inventoryLocation]
-        newItem[1] = newAmount
-        setInventory([...newInventory, newItem])
-        }
-    }
-
-    function checkIfQuestComplete(quest) {
+    function checkIfQuestCompleted(quest) {
         var output = false;
-        for (var i = 0; i < questsCompleted.length; i++) {
-            if (questsCompleted[i] == quest) {
+        for (var i = 0; i < gameData.player.questsCompleted.length; i++) {
+            if (gameData.player.questsCompleted[i].name == quest.name) {
                 output = true;
             }
         }
@@ -148,6 +120,15 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             updatedGameData.player.showInventory = true;
             setGameData(updatedGameData);
             setGettingRace(false);
+        }
+    }
+
+    function submitClass(classChoice) {
+        if (classChoice) {
+            var updatedGameData = JSON.parse(JSON.stringify(gameData));
+            updatedGameData.player.class = classChoice;
+            setGameData(updatedGameData);
+            setGettingClass(false);
         }
     }
 
@@ -179,12 +160,23 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             updatedGameData.player.location.containers[ownerIndex].inventory.splice(itemIndex, 1)
             updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.splice(itemIndex, 1)
         } else if (owner.name === gameData.player.name) {
-            updatedGameData.player.location.containers[ownerIndex].inventory.push(item)
-            updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.push(item)
+            if (target) {
+                console.log("give item to target")
+                console.log(updatedGameData);
+                updatedGameData.npcs.list.fargoth.inventory.push(item)
+            } else {
+                console.log("put item in container");
+                updatedGameData.player.location.containers[ownerIndex].inventory.push(item)
+                updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.push(item)
+            }
             updatedGameData.player.inventory.splice(itemIndex, 1);
         }
-        setContainer(updatedGameData.player.location.containers[ownerIndex]);
-        setGameData(updatedGameData);
+        if(target) {
+            return updatedGameData;
+        } else {
+            setContainer(updatedGameData.player.location.containers[ownerIndex]);
+            setGameData(updatedGameData);
+        }
     }
 
     function getContainer(coords) {
@@ -202,104 +194,106 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
 
     return (
         <>
-        {gettingRace ? <CharacterRaceSheet submitRace={submitRace} 
-                                            gameData={gameData}
-                        />  
-                     :
+        {gettingRace 
+        ? <CharacterRaceSheet submitRace={submitRace} 
+                              gameData={gameData}
+          />  
+            :
             <>
-                <div className="game">
-                    <div className="row justify-content-md-center">
-                        {lookingAtInventory 
-                        ? (
-                            <div className="col-lg-9">
-                                <CharacterSheet 
-                                    gameData={gameData}
-                                />
-                            </div>
-                          )
-                        : (
-                            <>
-                                {showTradeMenu 
-                                ? (
-                                    <div className="col-lg-9">
-                                        <TradeMenu
-                                            gameData={gameData}
-                                            container={container}
-                                            swapItemOwner={swapItemOwner}
-                                        />
-                                    </div>
-                                )
-                                :  (
-                                    <>
-                                        <div className="col-lg-3">
-                                            <ul className="guide">
-                                                Guide:
-                                                <li>
-                                                    @ - Character
-                                                </li>
-                                                <li>
-                                                    = - Door to new area
-                                                </li>
-                                                <li>
-                                                    0/1 Door - (closed/open)
-                                                </li>
-                                                <li>
-                                                    $ - Chest
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className="col-lg-6 mapContainer">
-                                            <Map click={click} 
-                                                setText={setText} 
-                                                setOptions={setOptions} 
-                                                setTarget={setTarget} 
-                                                map={map} 
-                                                setMap={setMap} 
+                {gettingClass
+                ? <CharacterClassForm submitClass={submitClass}
+                                      gameData={gameData}
+                  />
+                : <> 
+                    <div className="game">
+                        <div className="row justify-content-md-center">
+                            {lookingAtInventory 
+                            ? (
+                                <div className="col-lg-9">
+                                    <CharacterSheet 
+                                        gameData={gameData}
+                                    />
+                                </div>
+                            )
+                            : (
+                                <>
+                                    {showTradeMenu 
+                                    ? (
+                                        <div className="col-lg-9">
+                                            <TradeMenu
                                                 gameData={gameData}
-                                                setGameData={setGameData}
-                                                openContainer={openContainer}
-                                                getContainer={getContainer}
+                                                container={container}
+                                                swapItemOwner={swapItemOwner}
                                             />
                                         </div>
-                                    </>
-                                )
-                                }
-                            </>
-                        )}
-                        {showTradeMenu
-                        ? (
-                        <>
-                            <button onClick={() => closeTradeMenu()}>Close</button>
-                            <br/>
-                            <button onClick={() => console.log(gameData.player.inventory)}>Print Inventory</button>
-                            <br/>
-                            <button onClick={() => console.log(container.inventory)}>container inventory</button>
-                        </>
-                        )
-                        : (
-                            <div className="col-lg-3">
-                                Main Menu:
-                                <br/>
-                                <button onClick={() => setCharacterChoice(false)}>return to character list</button>
-                                <br/>
-                                <button onClick={() => saveGame()}>Save</button>
-                                <br/>
-                                <button onClick={() => displayInventory()}>
-                                    {lookingAtInventory
-                                        ? "Close"
-                                        : "Inventory"
+                                    )
+                                    :  (
+                                        <>
+                                            <div className="col-lg-3">
+                                                <ul className="guide">
+                                                    Guide:
+                                                    <li>
+                                                        @ - Character
+                                                    </li>
+                                                    <li>
+                                                        = - Door to new area
+                                                    </li>
+                                                    <li>
+                                                        0/1 Door - (closed/open)
+                                                    </li>
+                                                    <li>
+                                                        $ - Chest
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div className="col-lg-6 mapContainer">
+                                                <Map click={click} 
+                                                    setText={setText} 
+                                                    setOptions={setOptions} 
+                                                    setTarget={setTarget} 
+                                                    map={map} 
+                                                    setMap={setMap} 
+                                                    gameData={gameData}
+                                                    setGameData={setGameData}
+                                                    openContainer={openContainer}
+                                                    getContainer={getContainer}
+                                                />
+                                            </div>
+                                        </>
+                                    )
                                     }
-                                </button>
-                                <br/>
-                            </div>
-                          )
-                        }
-                        
+                                </>
+                            )}
+                            {showTradeMenu
+                            ? (
+                            <>
+                                <button onClick={() => closeTradeMenu()}>Close</button>
+                            </>
+                            )
+                            : (
+                                <div className="col-lg-3">
+                                    Main Menu:
+                                    <br/>
+                                    <button onClick={() => setCharacterChoice(false)}>return to character list</button>
+                                    <br/>
+                                    <button onClick={() => saveGame()}>Save</button>
+                                    <br/>
+                                    <button onClick={() => displayInventory()}>
+                                        {lookingAtInventory
+                                            ? "Close"
+                                            : "Inventory"
+                                        }
+                                    </button>
+                                </div>
+                            )
+                            }
+                            
+                        </div>
                     </div>
-                </div>
-                {target 
-                ? <TextWindow setOptions={setOptions} 
-                            checkIfQuestComplete={checkIfQuestComplete} 
+                
+                    {target 
+                    ? <TextWindow setOptions={setOptions} 
+                            checkIfQuestCompleted={checkIfQuestCompleted} 
                             setQuestsCompleted={setQuestsCompleted} 
                             checkQuestComplete={checkQuestComplete} 
                             questLog={questLog} 
@@ -313,9 +307,12 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                             gameData={gameData}
                             setGameData={setGameData}
                             setGettingRace={setGettingRace}
-                            handleQuestItemHandIn={handleQuestItemHandIn}
-                />
-                : ""}
+                            swapItemOwner={swapItemOwner}
+                            setGettingClass={setGettingClass}
+                      />
+                    : ""}
+                </>
+                }
             </>
             }
         </>

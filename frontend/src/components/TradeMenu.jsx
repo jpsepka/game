@@ -8,6 +8,7 @@ function TradeMenu({gameData, container, swapItemOwner}) {
             owner={gameData.player}
             swapItemOwner={swapItemOwner}
           />
+          <br/>
           <Inventory
             owner={container}
             swapItemOwner={swapItemOwner}

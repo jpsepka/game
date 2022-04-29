@@ -8,6 +8,7 @@ import locations from '../data/Location/Location';
 import questList from '../data/Quest/Quest';
 import {player} from '../data/Characters/Player'
 import races from '../data/Race/Race'
+import classes from '../data/Classes/Classes';
 
 function CharacterForm() {
     const dispatch = useDispatch()
@@ -19,7 +20,8 @@ function CharacterForm() {
                                   items: items, 
                                   locations: locations, 
                                   questList: questList,
-                                  races: races}))
+                                  races: races,
+                                  classes: classes}))
     }
 
     return (

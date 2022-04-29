@@ -13,7 +13,7 @@ var speed = new Attribute("speed")
 var strength = new Attribute("Strength")
 var willpower = new Attribute("Willpower")
 
-var attributes = [
+var attributes = {
     agility,
     endurance,
     intelligence,
@@ -22,6 +22,6 @@ var attributes = [
     speed,
     strength,
     willpower
-]
+}
 
 export default attributes

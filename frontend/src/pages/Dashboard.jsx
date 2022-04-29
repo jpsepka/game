@@ -8,6 +8,7 @@ import { getCharacters, reset } from '../features/characters/characterSlice';
 import GameWindow from '../components/GameWindow';
 import Inventory from '../components/Inventory';
 import CharacterRaceSheet from '../components/CharacterRaceSheet';
+import CharacterClassForm from '../components/CharacterClassForm';
 
 function Dashboard() {
     const [characterChoice, setCharacterChoice] = useState(false);
@@ -39,7 +40,7 @@ function Dashboard() {
     if (isLoading) {
       return <Spinner />
     }
-    
+
     return (
       <>
       {characterChoice ? 

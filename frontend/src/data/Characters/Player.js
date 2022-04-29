@@ -7,7 +7,7 @@ import races from '../Race/Race'
 class Player extends Person {
     constructor(coords, name, race, location, faction, stats, health, 
         energy, mana, level, inventory, armor, exp, armorRating, baseStats, target, 
-        questsCompleted, icon, showInventory) {
+        questsCompleted, icon, showInventory, questLog) {
         super(coords, name, race, location, faction, stats, health, 
             energy, mana, level, inventory, baseStats);
         this.armor = armor;
@@ -18,12 +18,13 @@ class Player extends Person {
         this.questsCompleted = questsCompleted;
         this.icon = icon;
         this.showInventory = showInventory;
+        this.questLog = questLog;
     }
 }
 
-var player = new Player([5,21], "tester", races.argonian, locations.censusAndExciseOfficeCourtyard, 
+var player = new Player([2,4], "", "", locations.imperialPrisonShipDownstairs, 
 [], [1,1,1,1,1], [0,0], [0,0], [0,0], 1, [], [], [0,100], 0, [], 
-0, [], "@", true);
+0, [], "@", true, []);
 
 export {Player}
 export {player};

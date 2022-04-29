@@ -34,6 +34,10 @@ const characterSchema = mongoose.Schema({
         races: {
             type: Object,
             required: [true, "huh?"]
+        },
+        classes: {
+            type: Object,
+            required: [true, "huh?"]
         }
     }
 }, {

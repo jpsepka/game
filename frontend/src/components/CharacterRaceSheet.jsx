@@ -25,15 +25,14 @@ function CharacterRaceSheet({submitRace, gameData}) {
                     }
                     <div className="row text-center">
                         <div className="genderConfirmA">
-                            <button className="morrowindTextButton morrowindColorText" onClick={() => setGender(!gender)}>Back</button>
+                            <button className="morrowindTextButton goldBoxOutline morrowindColorText" onClick={() => setGender(!gender)}>Back</button>
                         </div>
-                        {
-                        //just for show lols
+                        {//just for show lols
                         }
                         <div className="genderConfirmText">{gender ? "M" : "F"}</div>
                         <div className="genderConfirmB">
-                            <button className="morrowindTextButton morrowindColorText" onClick={() => setGender(!gender)}>Next</button>
-                            <button onClick={() => submitRace(raceChoice)} className="morrowindTextButton confirmRace morrowindColorText">OK</button>
+                            <button className="morrowindTextButton goldBoxOutline morrowindColorText" onClick={() => setGender(!gender)}>Next</button>
+                            <button onClick={() => submitRace(raceChoice)} className="morrowindTextButton goldBoxOutline confirmRace morrowindColorText">OK</button>
                         </div>
                     </div>
                 </div>

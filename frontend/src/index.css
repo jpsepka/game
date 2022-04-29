@@ -10,7 +10,7 @@ body {
   background-color: rgb(15, 15, 15);
   height: 100vh;
   color: white;
-}
+} 
 
 button {
   color: black;
@@ -160,7 +160,6 @@ h3 {
 .morrowindTextButton {
   cursor: pointer;
   border: none;
-  border: 1px solid rgb(188,162,117);
   background: none;
   padding-left: 5px;
   padding-right: 5px;
@@ -281,15 +280,27 @@ html, body {
   height: 100%
 }
 
+@font-face {
+  font-family: Magic Cards;
+  src: url('Magic\ Cards.ttf');
+}
+
 .text {
   height: 250px;
   padding-right: 0px;
   padding-left: 0px;
   background-color: rgb(34, 34, 34);
   color: #F0E68C;
+  font-size: 15px;
+  letter-spacing: 0.7px;
+}
+
+.options {
+  line-height: 0.8;
 }
 
 .npcTextBox {
+  padding-top: 5px;
   padding-left: 5px;
   margin: 5px;
   margin-left: 15px;
@@ -297,6 +308,21 @@ html, body {
   overflow: auto;
   height: 190px;
   width: 80%;
+}
+
+.npcText {
+  line-height: 15px;
+}
+
+.boxSpacing {
+  margin-top:20px;
+  padding-top: 5px;
+  margin-bottom: 10px;
+}
+
+.lightText {
+  color: #f5f2d6f8;
+  margin-bottom: 2px;
 }
 
 .mainGoldBoxOutline {
@@ -325,6 +351,28 @@ html, body {
   width: 200px;
 }
 
+.classBox {
+  height: 100px;
+  width: 600px;
+}
+
+.classList {
+  height: 100px;
+  text-align:left;
+}
+
+.skillList {
+  line-height: 20px;
+}
+
+.alignLeft {
+  text-align: left;
+}
+
+.alignRight {
+  text-align: right;
+}
+
 .raceBox {
   width: 800px;
   padding: 20px;
@@ -345,8 +393,19 @@ a {
   color: #F0E68C;
 }
 
+.morrowindFont {
+  font-family: Magic Cards;
+  letter-spacing: 1px;
+}
+
+.choices{
+  margin:0px;
+  margin-bottom:-5px;
+}
+
 .npcTextOptions {
   padding: 0px;
+  padding-top: 10px;
   padding-left: 5px;
   text-align: left;
   border: 1px solid #F0E68C;
@@ -393,6 +452,8 @@ a {
   padding-right: 5px;
   padding-top: 2px;
   padding-bottom: 3px;
+  font-size: 16px;
+  letter-spacing: 1px;
 }
 
 .headerBox {

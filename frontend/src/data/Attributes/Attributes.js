@@ -9,7 +9,7 @@ var endurance = new Attribute("Endurance")
 var intelligence = new Attribute("Intelligence")
 var luck = new Attribute("Luck")
 var personality = new Attribute("Personality")
-var speed = new Attribute("speed")
+var speed = new Attribute("Speed")
 var strength = new Attribute("Strength")
 var willpower = new Attribute("Willpower")
 

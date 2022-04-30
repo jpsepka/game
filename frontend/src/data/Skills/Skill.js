@@ -1,41 +1,42 @@
 class Skill {
-    constructor(name) {
+    constructor(name, specialization) {
         this.name = name;
+        this.specialization = specialization;
     }
 }
 
 //Combat
-var longBlade = new Skill("Long Blade")
-var bluntWeapon = new Skill("Blunt Weapon")
-var axe = new Skill("Axe")
-var armorer = new Skill("Armorer")
-var mediumArmor = new Skill("Medium Armor")
-var heavyArmor = new Skill("Heavy Armor")
-var spear = new Skill("Spear")
-var block = new Skill("Block")
-var athletics = new Skill("Athletics")
+var longBlade = new Skill("Long Blade", "Combat")
+var bluntWeapon = new Skill("Blunt Weapon", "Combat")
+var axe = new Skill("Axe", "Combat")
+var armorer = new Skill("Armorer", "Combat")
+var mediumArmor = new Skill("Medium Armor", "Combat")
+var heavyArmor = new Skill("Heavy Armor", "Combat")
+var spear = new Skill("Spear", "Combat")
+var block = new Skill("Block", "Combat")
+var athletics = new Skill("Athletics", "Combat")
 
 //Magic
-var alchemy = new Skill("Alchemy")
-var enchant = new Skill("Enchant")
-var conjuration = new Skill("Conjuration")
-var alteration = new Skill("Alteration")
-var destruction = new Skill("Destruction")
-var mysticism = new Skill("Mysticism")
-var restoration = new Skill("Restoration")
-var illusion = new Skill("Illusion")
-var unarmored = new Skill("Unarmored")
+var alchemy = new Skill("Alchemy", "Magic")
+var enchant = new Skill("Enchant", "Magic")
+var conjuration = new Skill("Conjuration", "Magic")
+var alteration = new Skill("Alteration", "Magic")
+var destruction = new Skill("Destruction", "Magic")
+var mysticism = new Skill("Mysticism", "Magic")
+var restoration = new Skill("Restoration", "Magic")
+var illusion = new Skill("Illusion", "Magic")
+var unarmored = new Skill("Unarmored", "Magic")
 
 //Stealth
-var acrobatics = new Skill("Acrobatics")
-var security = new Skill("Security")
-var sneak = new Skill("Sneak")
-var lightArmor = new Skill("Light Armor")
-var marksman = new Skill("Marksman")
-var shortBlade = new Skill("Short Blade")
-var handToHand = new Skill("Hand-to-Hand")
-var mercantile = new Skill("Mercantile")
-var speechcraft = new Skill("Speechcraft")
+var acrobatics = new Skill("Acrobatics", "Stealth")
+var security = new Skill("Security", "Stealth")
+var sneak = new Skill("Sneak", "Stealth")
+var lightArmor = new Skill("Light Armor", "Stealth")
+var marksman = new Skill("Marksman", "Stealth")
+var shortBlade = new Skill("Short Blade", "Stealth")
+var handToHand = new Skill("Hand-to-Hand", "Stealth")
+var mercantile = new Skill("Mercantile", "Stealth")
+var speechcraft = new Skill("Speechcraft", "Stealth")
 
 var skills = {
     longBlade,

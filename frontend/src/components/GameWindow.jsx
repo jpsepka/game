@@ -6,9 +6,8 @@ import TextWindow from './TextWindow';
 import { useState } from 'react';
 import {Player} from '../data/Characters/Player'
 import {Location} from '../data/Location/Location'
-import {NPC} from '../data/Characters/NPC'
 import { useEffect } from 'react';
-import CharacterRaceSheet from './CharacterRaceSheet';
+import CharacterRaceForm from './CharacterRaceForm';
 import CharacterClassForm from './CharacterClassForm';
 import CharacterSheet from './CharacterSheet';
 import TradeMenu from './TradeMenu';
@@ -18,9 +17,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     const [target, setTarget] = useState(false);
     const [text, setText] = useState([])
     const [options, setOptions] = useState([])
-    const [questLog, setQuestLog] = useState([])
-    const [inventory, setInventory] = useState('');
-    const [questsCompleted, setQuestsCompleted] = useState('');
     const [map, setMap] = useState([[[],[]],[[],[]]]);
     const [gettingRace, setGettingRace] = useState(false);
     const [gettingClass, setGettingClass] = useState(false);
@@ -33,7 +29,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         newGameData.player = Object.assign(new Player(), newGameData.player);
         newGameData.player.location = Object.assign(new Location(), newGameData.player.location);
         
-
         setGameData(newGameData);
         setMap(newGameData.player.location.map);
     }, [characterChoice])
@@ -91,7 +86,9 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     }
 
     function handleQuestItems(quest) {
-        setInventory(old => [...old, [quest.items, 1]])
+        var updatedGameData = gameData;
+        updatedGameData.player.inventory.push([quest.items, 1])
+        setGameData(updatedGameData);
     }
 
     function checkIfQuestCompleted(quest) {
@@ -117,7 +114,28 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         if (raceChoice) {
             var updatedGameData = JSON.parse(JSON.stringify(gameData));
             updatedGameData.player.race = raceChoice;
-            updatedGameData.player.showInventory = true;
+            for (var i = 0; i < updatedGameData.player.attributes.length; i++) {
+                updatedGameData.player.attributes[i][1] = updatedGameData.player.attributes[i][1] + raceChoice.baseAttributes[i]
+            }
+            var health = 0;
+            var mana = 0;
+            var fatigue = 0;
+            for (var z = 0; z < updatedGameData.player.attributes.length; z++) {
+                if ((updatedGameData.player.attributes[z][0].name == "Strength") || (updatedGameData.player.attributes[z][0].name == "Endurance")) {
+                    health = health + updatedGameData.player.attributes[z][1]
+                    fatigue = fatigue + updatedGameData.player.attributes[z][1]
+                } else if (updatedGameData.player.attributes[z][0].name == "Intelligence") {
+                    mana = mana + updatedGameData.player.attributes[z][1]
+                } else if ((updatedGameData.player.attributes[z][0].name == "Willpower") || (updatedGameData.player.attributes[z][0].name == "Agility")) {
+                    fatigue = fatigue + updatedGameData.player.attributes[z][1];
+                }
+            }
+            health = health / 2;
+            mana = mana * (1 + raceChoice.manaMultiplier);
+
+            updatedGameData.player.health = [health, health]
+            updatedGameData.player.mana = [mana, mana]
+            updatedGameData.player.energy = [fatigue, fatigue]
             setGameData(updatedGameData);
             setGettingRace(false);
         }
@@ -127,6 +145,47 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         if (classChoice) {
             var updatedGameData = JSON.parse(JSON.stringify(gameData));
             updatedGameData.player.class = classChoice;
+            var skillList = Object.values(updatedGameData.skills);
+            for (var i = 0; i < skillList.length; i++) {
+                var major = false;
+                var minor = false;
+                var misc = true;
+                for (var j = 0; j < classChoice.major.length; j++) {
+                    if (skillList[i].name === classChoice.major[j].name) {
+                        major = true;
+                        misc = false;
+                    }
+                }
+                for (var k = 0; k < classChoice.minor.length; k++) {
+                    if (skillList[i].name === classChoice.minor[k].name) {
+                        minor = true;
+                        misc = false;
+                    }
+                }
+
+                var level = 5;
+
+                for (var l = 0; l < updatedGameData.player.race.baseSkills.length; l++) {
+                    if (updatedGameData.player.race.baseSkills[l][1].name == skillList[i].name) {
+                        level = level + updatedGameData.player.race.baseSkills[l][0]
+                    }
+                }
+
+                if (classChoice.specialization === skillList[i].specialization) {
+                    level = level + 5;
+                }
+                
+                if (major) {
+                    level = level + 25;
+                    updatedGameData.player.majorSkills.push([skillList[i], level])
+                } else if (minor) {
+                    level = level + 10;
+                    updatedGameData.player.minorSkills.push([skillList[i], level])
+                } else {
+                    updatedGameData.player.miscSkills.push([skillList[i], level]);
+                }
+            }
+            updatedGameData.player.showInventory = true;
             setGameData(updatedGameData);
             setGettingClass(false);
         }
@@ -139,6 +198,10 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
 
     function closeTradeMenu() {
         setShowTradeMenu(false);
+    }
+
+    function openDoor() {
+        
     }
 
     function swapItemOwner(item, owner) {
@@ -161,11 +224,8 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.splice(itemIndex, 1)
         } else if (owner.name === gameData.player.name) {
             if (target) {
-                console.log("give item to target")
-                console.log(updatedGameData);
                 updatedGameData.npcs.list.fargoth.inventory.push(item)
             } else {
-                console.log("put item in container");
                 updatedGameData.player.location.containers[ownerIndex].inventory.push(item)
                 updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.push(item)
             }
@@ -195,7 +255,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     return (
         <>
         {gettingRace 
-        ? <CharacterRaceSheet submitRace={submitRace} 
+        ? <CharacterRaceForm submitRace={submitRace} 
                               gameData={gameData}
           />  
             :
@@ -209,11 +269,12 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                         <div className="row justify-content-md-center">
                             {lookingAtInventory 
                             ? (
-                                <div className="col-lg-9">
+                                <>
                                     <CharacterSheet 
                                         gameData={gameData}
                                     />
-                                </div>
+                                    <button onClick={() => displayInventory()}>Close</button>
+                                </>
                             )
                             : (
                                 <>
@@ -262,31 +323,32 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                                         </>
                                     )
                                     }
+                                {showTradeMenu
+                                ? (
+                                <>
+                                    <button onClick={() => closeTradeMenu()}>Close</button>
                                 </>
-                            )}
-                            {showTradeMenu
-                            ? (
-                            <>
-                                <button onClick={() => closeTradeMenu()}>Close</button>
+                                )
+                                : (
+                                    <div className="col-lg-3">
+                                        Main Menu:
+                                        <br/>
+                                        <button onClick={() => setCharacterChoice(false)}>return to character list</button>
+                                        <br/>
+                                        <button onClick={() => saveGame()}>Save</button>
+                                        <br/>
+                                        {gameData.player.showInventory
+                                        ?
+                                        <button onClick={() => displayInventory()}>
+                                            Inventory
+                                        </button>
+                                        : ""}
+                                    </div>
+                                )
+                                }
                             </>
-                            )
-                            : (
-                                <div className="col-lg-3">
-                                    Main Menu:
-                                    <br/>
-                                    <button onClick={() => setCharacterChoice(false)}>return to character list</button>
-                                    <br/>
-                                    <button onClick={() => saveGame()}>Save</button>
-                                    <br/>
-                                    <button onClick={() => displayInventory()}>
-                                        {lookingAtInventory
-                                            ? "Close"
-                                            : "Inventory"
-                                        }
-                                    </button>
-                                </div>
-                            )
-                            }
+                            
+                            )}
                             
                         </div>
                     </div>
@@ -294,14 +356,11 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                     {target 
                     ? <TextWindow setOptions={setOptions} 
                             checkIfQuestCompleted={checkIfQuestCompleted} 
-                            setQuestsCompleted={setQuestsCompleted} 
-                            checkQuestComplete={checkQuestComplete} 
-                            questLog={questLog} 
+                            checkQuestComplete={checkQuestComplete}
                             options={options} 
                             text={text} 
                             target={target} 
-                            setText={setText}   
-                            setQuestLog={setQuestLog} 
+                            setText={setText}
                             handleQuestItems={handleQuestItems} 
                             characterChoice={characterChoice}
                             gameData={gameData}

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { NPC } from "../data/Characters/NPC";
-import { containers } from "../data/Location/GameObjects/Container";
 import { Location } from "../data/Location/Location";
 
 function Map({click, setText, setOptions, setTarget, map, setMap,
@@ -103,7 +102,6 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
             case "1":
             case " ":
             case ".":
-            case "0":
                 setTranslate({transform: 'translateX('+(updatedGameData.player.coords[1]*-1)+'ch) translateY('+(updatedGameData.player.coords[0]*-1)+'em)'})
                 setTarget(false)
                 updatedGameData.player.target = "";
@@ -118,6 +116,10 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
             break;
             case "$":
                 openContainer(getContainer(gameData.player.coords))
+                undoMove(key);
+            break;
+            case "0":
+                console.log("the door is locked")
                 undoMove(key);
             break;
             default:
@@ -223,6 +225,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
     )
 }
 
+/*
 const MapRow = ({row, rowId, gameData,getNpcByLocation}) => {
     return (
         <div id={"row" + rowId} key={"row" + rowId} className='row'>
@@ -268,5 +271,5 @@ const MapTile = ({tile, rowId, tileId, gameData, getNpcByLocation}) => {
         </div>
     )
 }
-
+*/
 export default Map

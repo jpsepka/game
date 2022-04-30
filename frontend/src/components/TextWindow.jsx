@@ -1,8 +1,9 @@
 import React from 'react';
 import {useState, useEffect} from 'react'
+import ProgressBar from './ProgressBar';
 
-function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted, 
-    checkQuestComplete, questLog, options, text, target, setText, setQuestLog, 
+function TextWindow({ setOptions, checkIfQuestCompleted, 
+    checkQuestComplete, options, text, target, setText, 
     handleQuestItems, gameData, setGameData, setGettingRace, 
     swapItemOwner, setGettingClass }) {
     
@@ -70,8 +71,8 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
             console.log("option starts a quest")
             var questPick = target.dialogue[choice].quest;
             var inQuestLog = false;
-            for (var i = 0; i < questLog.length; i++) {
-                if (questLog[i] == questPick) {
+            for (var i = 0; i < gameData.player.questLog.length; i++) {
+                if (gameData.player.questLog[i].name == questPick.name) {
                     inQuestLog = true;
                 }
             }
@@ -82,10 +83,6 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
                     if (checkQuestReceiver(questPick)) { //if talking to the receiver
                         console.log("talking to the receiver");
                         setText(old => [...old, target.dialogue[choice].option, questPick.complete])
-                        /*
-                        setQuestLog(questLog.filter((quest) => quest !== questPick))
-                        setQuestsCompleted(old => [...old, questPick])
-                        */
                         var updatedGameData = JSON.parse(JSON.stringify(gameData));
                         updatedGameData.player.questsCompleted.push(questPick);
                         updatedGameData.player.questLog.filter((quest) => quest !== questPick)
@@ -160,23 +157,13 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
         console.log("-------------------------------------")
     }
 
-    function handleQuestItemHandIn(quest) {
-        /*
-        var updatedGameData = JSON.parse(JSON.stringify(gameData));
-        var itemIndex = updatedGameData.player.inventory.indexOf(quest.criteria[0]);
-        updatedGameData.player.inventory.splice(itemIndex, 1)
-        console.log(updatedGameData.player.inventory);
-        setGameData(updatedGameData);
-        */
-        //swapItemOwner(quest.criteria, gameData.player);
-    }
-
     //this function currently only refers to quest choices
     function handleTextChoice(choice) {
+        var updatedGameData = JSON.parse(JSON.stringify(gameData));
         console.log("Now handling text choice...")
         var inQuestLog = false;
-        for (var i = 0; i < questLog.length; i++) {
-            if (questLog[i] == quest) {
+        for (var i = 0; i < gameData.player.questLog.length; i++) {
+            if (gameData.player.questLog[i].name == quest.name) {
                 inQuestLog = true;
             }
         }
@@ -184,16 +171,12 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
             console.log("accepting")
             if (checkQuestComplete(quest)) { //if quest criteria is met
                 console.log("quest criteria is met")
-                var updatedGameData = JSON.parse(JSON.stringify(gameData));
                 updatedGameData = swapItemOwner(quest.criteria, gameData.player);
-                console.log(updatedGameData);
                 if (inQuestLog) { //if criteria is met and in quest log
                     console.log("criteria is met and quest is in quest log")
                     updatedGameData.player.questLog.filter((quest) => quest !== quest)
                 }
-                handleQuestItemHandIn(quest);
                 updatedGameData.player.questsCompleted.push(quest);
-                setGameData(updatedGameData);
                 setText(old => [...old, quest.complete[1], quest.complete[0]])
             } else { //if quest criteria is not met
                 console.log("quest criteria is not met")
@@ -201,7 +184,7 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
                     console.log("accepted quest gives items")
                     handleQuestItems(quest);
                 }
-                setQuestLog(old => [...old, quest])
+                updatedGameData.player.questLog.push(quest);
                 setText(old => [...old, quest.acceptQuestText])
             }
         } else if (!choice.accept) { //if declining
@@ -210,6 +193,7 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
         }
         setGetUserInput(false);
         setQuest(0)
+        setGameData(updatedGameData);
         console.log("-------------------------------------")
     }
     
@@ -223,40 +207,42 @@ function TextWindow({ setOptions, checkIfQuestCompleted, setQuestsCompleted,
             ? (
                 <>
                 {text.map((line, id) => (
-                    <>
+                    <div key={id}>
                         {line.title
                         ? (
-                            <p className="npcText lightText" key={id}>
+                            <p className="npcText lightText">
                                 {line.text}
                             </p>
                         )
                         : (
-                            <p className="npcText" key={id}>
+                            <p className="npcText">
                                 {line}
                             </p>
                         )
                         }
-                    </>
+                    </div>
                 ))}
                 </>
             )
             : ""}
-            {!notarget && getUserInput ? choices.map((choice) => (
-                <p className="choices"><a onClick={()=>handleTextChoice(choice)}>{choice.text}</a></p>
+            {!notarget && getUserInput ? choices.map((choice, id) => (
+                <p key={id} className="choices">
+                    <a onClick={()=>handleTextChoice(choice)}>
+                        {choice.text}
+                    </a>
+                </p>
             )) : ""}
             </div>
             <div className="col-sm-2">
-                <div className="progress">
-                    <div className="progress-bar" role="progressbar" style={{width: target.opinion + '%'}}></div>
-                    <div className="progress-bar-text">{target.opinion} / 100</div>
-                </div>
+                <ProgressBar
+                    maxVal = {100}
+                    val = {target.opinion}
+                />
                 <ul>
                 <div className="npcTextOptions">{!notarget ? options.map((option, id) => (
-                    <>
-                        <p className="options" id={id} onClick={()=> {
-                            handleOptionClick(id)
-                        }}>{option.text}</p>
-                    </>
+                    <p className="options" key={id} onClick={()=> {handleOptionClick(id)}}>
+                        {option.text}
+                    </p>
                 )) : " "}</div>
                 </ul>
             </div>

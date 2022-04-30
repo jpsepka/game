@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 function CharacterClassForm({submitClass, gameData}) {
     const [classChoice, setClassChoice] = useState(false);
-    console.log(gameData);
     const classList = Object.values(gameData.classes);
+    console.log(classChoice);
 
     return (
         <div className="container alignLeft mainGoldBoxOutline morrowindColorText classBox">

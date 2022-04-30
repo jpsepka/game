@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-function CharacterRaceSheet({submitRace, gameData}) {
+function CharacterRaceForm({submitRace, gameData}) {
     const [raceChoice, setRaceChoice] = useState(false);
     const raceList = Object.values(gameData.races);
     const [gender, setGender] = useState(true);
@@ -73,7 +73,7 @@ function CharacterRaceSheet({submitRace, gameData}) {
     );
 }
 
-export default CharacterRaceSheet;
+export default CharacterRaceForm;
 
 /*
 <div>

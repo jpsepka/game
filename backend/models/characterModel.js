@@ -38,6 +38,10 @@ const characterSchema = mongoose.Schema({
         classes: {
             type: Object,
             required: [true, "huh?"]
+        },
+        skills: {
+            type: Object,
+            required: [true, "huh?"]
         }
     }
 }, {

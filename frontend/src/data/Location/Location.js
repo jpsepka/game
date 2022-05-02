@@ -16,9 +16,6 @@ class Location {
         for (var i = 0; i < this.map.length; i++) {
             this.map[i] = Array.from(this.map[i]);
         }
-        for (var i = 0; i < this.doors.length; i++) {
-            this.map[this.doors[i].coords[0]][this.doors[i].coords[1]] = this.doors[i].icon
-        }
     }
 
     setMap(updatedMap) {
@@ -42,7 +39,7 @@ class Location {
 var imperialPrisonShipDownstairsMap = [" /--------------------\\\n",
                                        "//.....|..............\\\\\n",
                                        "|......|...............|\n",
-                                       "\\\\....................//\n",
+                                       "\\\\.....D..............//\n",
                                        " \\--------------------/"];
 
 var imperialPrisonShipMap = [" /--------------------\\\n",
@@ -140,17 +137,17 @@ var seydaNeenMap = ["           ~               /^\\                            
     ]
 
 
-var imperialPrisonShipDownstairs = new Location(0, "Imperial Prison Ship - Prisoner Level", 
+var imperialPrisonShipPrisonerLevel = new Location(0, "Imperial Prison Ship - Prisoner Level", 
 true, [doors.shipJiubRoom, doors.shipDownStairsToUp], imperialPrisonShipDownstairsMap, [0, 1], [])
 
-var imperialPrisonShip = new Location(1, "Imperial Prison Ship - Below Deck", 
+var imperialPrisonShipBelowDeck = new Location(1, "Imperial Prison Ship - Below Deck", 
 true, [doors.shipUpstairsToDown, doors.shipUpstairsToDeck], imperialPrisonShipMap, [], [])
 
 var imperialPrisonShipAboveDeck = new Location(2, "Imperial Prison Ship - Above Deck", 
 false, [doors.shipDeckToUpstairs, doors.shipToExciseOffice], imperialPrisonShipAboveDeckMap, [3], []);
 
 var censusAndExciseOffice = new Location(3, "Census and Excise Office", 
-true, [doors.exciseOfficeToShip, doors.exciseOfficeToCourtyard, doors.censusAndExciseOfficeDoor], censusAndExciseOfficeMap, [2], []);
+true, [doors.exciseOfficeToShip, doors.censusAndExciseOfficeBasementDoor, doors.exciseOfficeToCourtyard, doors.censusAndExciseOfficeDoor], censusAndExciseOfficeMap, [2], []);
 
 var censusAndExciseOfficeCourtyard = new Location(4, "Census and Excise Office Courtyard",
 false, [doors.courtyardToExciseOffice, doors.courtyardToExciseOfficeTwo], censusAndExciseOfficeCourtyardMap, [], [containers.exciseOfficeCourtyardChest])
@@ -160,8 +157,8 @@ var censusAndExciseOfficeTwo = new Location(5, "Census and Excise Office", true,
 
 var seydaNeen = new Location(6, "Seyda Neen", false, [doors.seydaNeenToExciseOfficeTwo], seydaNeenMap, [5], []);
 
-imperialPrisonShipDownstairs.initializeMap();
-imperialPrisonShip.initializeMap();
+imperialPrisonShipPrisonerLevel.initializeMap();
+imperialPrisonShipBelowDeck.initializeMap();
 imperialPrisonShipAboveDeck.initializeMap();
 censusAndExciseOffice.initializeMap();
 censusAndExciseOfficeCourtyard.initializeMap();
@@ -169,8 +166,8 @@ censusAndExciseOfficeTwo.initializeMap();
 seydaNeen.initializeMap();
 
 var locations = {
-        imperialPrisonShipDownstairs,
-        imperialPrisonShip,
+        imperialPrisonShipPrisonerLevel,
+        imperialPrisonShipBelowDeck,
         imperialPrisonShipAboveDeck,
         censusAndExciseOffice,
         censusAndExciseOfficeCourtyard,

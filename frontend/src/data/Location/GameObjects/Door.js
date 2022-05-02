@@ -16,6 +16,7 @@ class Door {
 
 var shipJiubRoom = new Door("0", [3,7], -1, true, 100);
 var censusAndExciseOfficeDoor = new Door("0", [6,26], -1, true, 100);
+var censusAndExciseOfficeBasementDoor = new Door("0", [5,4], -1, false, -1)
 var shipDownStairsToUp = new Door("=", [2, 22], 1, false, -1)
 var shipUpstairsToDown = new Door("=", [2, 22], 0, false, -1);
 var shipUpstairsToDeck = new Door("=", [2, 14], 2, false, -1)
@@ -33,6 +34,7 @@ var seydaNeenToExciseOfficeTwo = new Door("=", [22,34], 5, false, -1);
 var doors = {
     shipJiubRoom, 
     censusAndExciseOfficeDoor,
+    censusAndExciseOfficeBasementDoor,
     shipDownStairsToUp, 
     shipUpstairsToDown, 
     shipUpstairsToDeck,

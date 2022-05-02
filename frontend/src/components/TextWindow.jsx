@@ -5,12 +5,13 @@ import ProgressBar from './ProgressBar';
 function TextWindow({ setOptions, checkIfQuestCompleted, 
     checkQuestComplete, options, text, target, setText, 
     handleQuestItems, gameData, setGameData, setGettingRace, 
-    swapItemOwner, setGettingClass }) {
+    swapItemOwner, setGettingClass, openDoor, setMap, loadMap }) {
     
     var notarget = true;
     const [getUserInput, setGetUserInput] = useState(false);
     const [choices, setChoices] = useState([]);
     const [quest, setQuest] = useState();
+
     if (target.name == '') {
         notarget = true;
     } else {
@@ -137,11 +138,12 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
 
             var updatedGameData = JSON.parse(JSON.stringify(gameData))
             updatedGameData.player.name = prompt("What is your name?")
-            updatedGameData.locations.imperialPrisonShipDownstairs.map[3][7] = "1";
-            updatedGameData.player.location = updatedGameData.locations.imperialPrisonShipDownstairs
+            updatedGameData.player.location = openDoor([3,7]);
+            console.log(updatedGameData.player.location);
             updatedGameData.npcs.list.jiub.greeting = "You better do what they say...";
             updatedGameData.npcs.list.jiub.dialogue = [];
             setGameData(updatedGameData);
+            setMap(loadMap())
         } else if (target.dialogue[choice].id == 1) {//if option is for character race choice
             console.log("option is for character race event")
             setGettingRace(true);
@@ -198,11 +200,12 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
     }
     
     return (
-        <div className="morrowindFont container-fluid text">
+        <div className="morrowindFont mainGoldBoxOutline container text">
             <p className="headerBox text-center">
                 <span className="headerText">{!notarget ? target.name : (" ")}</span>
             </p>
-            <div id="npcDialogueBox" className="col-sm-10 npcTextBox goldBoxOutline">
+            <div className='row textBox '>
+            <div id="npcDialogueBox" className="col-sm-10 npcTextBox npcTextBoxSizing goldBoxOutline">
             {!notarget 
             ? (
                 <>
@@ -210,12 +213,12 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
                     <div key={id}>
                         {line.title
                         ? (
-                            <p className="npcText lightText">
+                            <p className="morrowindFont npcText lightText">
                                 {line.text}
                             </p>
                         )
                         : (
-                            <p className="npcText">
+                            <p className="morrowindFont npcText">
                                 {line}
                             </p>
                         )
@@ -226,25 +229,29 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
             )
             : ""}
             {!notarget && getUserInput ? choices.map((choice, id) => (
-                <p key={id} className="choices">
+                <p key={id} className="morrowindFont choices">
                     <a onClick={()=>handleTextChoice(choice)}>
                         {choice.text}
                     </a>
                 </p>
             )) : ""}
             </div>
-            <div className="col-sm-2">
+            <div className="col-sm-2 morrowindFont npcTextBoxSpecial npcTextBoxSizing">
                 <ProgressBar
                     maxVal = {100}
                     val = {target.opinion}
+                    type = 'textWindow'
                 />
-                <ul>
-                <div className="npcTextOptions">{!notarget ? options.map((option, id) => (
+                <div className="npcTextOptions goldBoxOutline">
+                {!notarget 
+                ? options.map((option, id) => (
                     <p className="options" key={id} onClick={()=> {handleOptionClick(id)}}>
                         {option.text}
                     </p>
-                )) : " "}</div>
-                </ul>
+                )) 
+                : " "}
+                </div>
+            </div>
             </div>
         </div>
     );

@@ -6,7 +6,6 @@ import Spinner from '../components/Spinner'
 import CharacterItem from '../components/CharacterItem'
 import { getCharacters, reset } from '../features/characters/characterSlice';
 import GameWindow from '../components/GameWindow';
-import Inventory from '../components/Inventory';
 
 function Dashboard() {
     const [characterChoice, setCharacterChoice] = useState(false);

@@ -41,11 +41,11 @@ class NPC extends Person {
 }
 
 
-var jiub = new NPC([2, 6], "Jiub", races.darkElf, locations.imperialPrisonShipDownstairs, [], 
+var jiub = new NPC([2, 6], "Jiub", races.darkElf, locations.imperialPrisonShipPrisonerLevel, [], 
 [50, 50, 50, 50, 50], 200, 100, 150, 25, [], 
 [0,0,0,0,0], 50, [dialogue.starterDialogue.jiubOpener0], "@", "Wake up. Wake up! Stand up, there you go. You were dreaming. What's your name?", 0, false);
 
-var guard = new NPC([3, 21], "Guard", races.imperial, locations.imperialPrisonShipDownstairs,
+var guard = new NPC([3, 21], "Guard", races.imperial, locations.imperialPrisonShipPrisonerLevel,
 "faction", "stats", "health", "energy", "mana", "level", "inventory", "baseStats",
 50, [], "@", 'Up the stairs, prisoner!', 1, false);
 

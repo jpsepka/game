@@ -1,10 +1,53 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import Inventory from './Inventory';
 import ProgressBar from './ProgressBar';
 
 function CharacterSheet({gameData}) {
+    const [majors, setMajors] = useState([])
+    const [minors, setMinors] = useState([])
+    const [miscs, setMiscs] = useState([])
+
+    useEffect(() => {
+        var skillList = Object.values(gameData.skills);
+        var skillEntries = Object.entries(gameData.skills);
+        var majorsList = [];
+        var minorsList = [];
+        var miscsList = [];
+        for (var i = 0; i < skillList.length; i++) {
+            var major = false;
+            var minor = false;
+            var misc = true;
+            for (var z = 0; z < gameData.player.class.major.length; z++) { //for each class major skill
+                if (skillList[i].name === gameData.player.class.major[z].name) { //if skill is a class major skill
+                    major = true;
+                    misc = false;
+                    majorsList.push({name: skillList[i].name, level: gameData.player.skills[skillEntries[i][0]]})
+                }
+            }
+
+            if (!major) { //if class is not a major skill
+                for (var k = 0; k < gameData.player.class.minor.length; k++) { //for each class minor skill
+                    if (skillList[i].name === gameData.player.class.minor[k].name) { //if skill is a class minor skill
+                        minor = true;
+                        misc = false;
+                        minorsList.push({name: skillList[i].name, level: gameData.player.skills[skillEntries[i][0]]})
+                    }
+                }
+            }
+            
+            if (misc) {
+                miscsList.push({name: skillList[i].name, level: gameData.player.skills[skillEntries[i][0]]})
+            }
+        }
+        
+        setMajors(majorsList);
+        setMinors(minorsList);
+        setMiscs(miscsList);
+    }, [])
     return (
-        <div className="container-fluid morrowindFont mainGoldBoxOutline morrowindColorText">
+        <div className="container-fluid morrowindFont morrowindColorText">
             <div className="row">
                 <div className="col-sm-5 mainGoldBoxOutline charSheetSection">
                     <p className="headerBox">
@@ -84,11 +127,11 @@ function CharacterSheet({gameData}) {
 
                             <table className="goldBoxOutline">
                                 <tbody>
-                                    {gameData.player.attributes.map((attribute) => {
+                                    {(Object.entries(gameData.player.attributes)).map((attribute) => {
                                         return (
                                             <tr>
                                                 <td className="lightText">
-                                                    {attribute[0].name}
+                                                    {attribute[0].charAt(0).toUpperCase() + attribute[0].slice(1)}
                                                 </td>
                                                 <td className="alignRight">
                                                     {attribute[1]}
@@ -103,7 +146,7 @@ function CharacterSheet({gameData}) {
                         <div className='col-sm-1'>
                             
                         </div>
-                        <div className="col-sm-5 alignLeft goldBoxOutline morrowindFont">
+                        <div className="col-sm-5 alignLeft skillList goldBoxOutline morrowindFont">
                             <table>
                                 <tbody>
                                     <tr>
@@ -111,14 +154,14 @@ function CharacterSheet({gameData}) {
                                             Major Skills
                                         </td>
                                     </tr>
-                                    {gameData.player.majorSkills.map((skill) => {
+                                    {majors.map((skill) => {
                                         return (
-                                            <tr key={skill[0].name}>
+                                            <tr key={skill.name}>
                                                 <td className='skillListItem'>
-                                                    {skill[0].name}
+                                                    {skill.name}
                                                 </td>
                                                 <td className="alignRight">
-                                                    {skill[1]}
+                                                    {skill.level}
                                                 </td>
                                             </tr>
                                         )
@@ -128,14 +171,14 @@ function CharacterSheet({gameData}) {
                                             Minor Skills
                                         </td>
                                     </tr>
-                                    {gameData.player.minorSkills.map((skill) => {
+                                    {minors.map((skill) => {
                                         return (
-                                            <tr key={skill[0].name}>
+                                            <tr key={skill.name}>
                                                 <td className='skillListItem'>
-                                                    {skill[0].name}
+                                                    {skill.name}
                                                 </td>
                                                 <td className="alignRight">
-                                                    {skill[1]}
+                                                    {skill.level}
                                                 </td>
                                             </tr>
                                         )
@@ -145,14 +188,14 @@ function CharacterSheet({gameData}) {
                                             Misc Skills
                                         </td>
                                     </tr>
-                                    {gameData.player.miscSkills.map((skill) => {
+                                    {miscs.map((skill) => {
                                         return (
-                                            <tr key={skill[0].name}>
+                                            <tr key={skill.name}>
                                                 <td className='skillListItem'>
-                                                    {skill[0].name}
+                                                    {skill.name}
                                                 </td>
                                                 <td className="alignRight">
-                                                    {skill[1]}
+                                                    {skill.level}
                                                 </td>
                                             </tr>
                                         )

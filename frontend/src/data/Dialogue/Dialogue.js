@@ -17,7 +17,7 @@ var guardOpener0 = new Dialogue(1, "Great. I'm sure you'll fit right in. Now hea
 {text: "where", title: true}, [], false, false)
 var socuciusErgalla0 = new Dialogue(100, "Very good. Here are your papers, take them to the Captain Gravius before you leave.", 
 {text: "class", title: true}, [], false, false);
-var fargothRing =  new Dialogue(2, "I swear one of the guards has it. I had it last week before their weekly \"Let's shake down Fargoth\" ritual. An engraved healing ring, family heirloom of mine. You haven't seen it, have you? Will you look for it for me?", 
+var fargothRing =  new Dialogue(2, "I swear one of the guards has it. I had it last week before their weekly \"Let's shake down Fargoth\" ritual. An engraved healing ring, family heirloom of mine. You haven't seen it, have you?", 
 {text: "ring", title: true}, [], questList.fargothsRing, false);
 var services = new Dialogue(8, "Get food and sundries from Arrille's Tradehouse. That's also where you'll find anyone who offers training. Not much else in the way of services in this dank little squat.", 
 {text:"Services", title:true}, [], false, false)

@@ -28,9 +28,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
         };
       });
 
-      
-
-    useEffect(() => {
+    useEffect(() => { //this is so everything shows up on first render. theres probably a better way to do this
         setLocation(gameData.player.location.name);
         document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}))
     }, [location])

@@ -11,7 +11,6 @@ function ProgressBar({maxVal, val, type}) {
 
     useEffect(() => {
         if (type == 'textWindow') {
-            console.log("hi");
             setStyleBox({
                 marginRight: 0 + 'px',
                 marginBottom: 10 + 'px',
@@ -20,6 +19,13 @@ function ProgressBar({maxVal, val, type}) {
             })
         }
     }, [])
+
+    useEffect(() => {
+        setStyle({
+            backgroundColor: type,
+            width: 100*(val/maxVal) + '%'
+        })
+    }, [val])
 
     return (
         <div className="progress stats goldBoxOutline" style={styleBox}>

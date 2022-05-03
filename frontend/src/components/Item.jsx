@@ -2,7 +2,7 @@ import React from 'react';
 
 function Item({item, swapItemHelper}) {
     return (
-        <p className="hoverable" key={item[0].name}>
+        <p className="hoverable morrowindColorText morrowindFont" key={item[0].name}>
             <span className="morrowindFont goldBoxOutline hoverable_tooltip">
                 {item[0].name}
                 <br/>

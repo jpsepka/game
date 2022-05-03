@@ -48,11 +48,10 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
 
     function click(person) {
         setOptions([])
-        console.log(person);
 
         var updatedGameData = JSON.parse(JSON.stringify(gameData))
         person.opinion = calculateDisposition(person);
-        updatedGameData.player.target = person
+        updatedGameData.player.target = person.name
         setTarget(person);
         setGameData(updatedGameData);
 
@@ -67,7 +66,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     }
 
     function calculateDisposition(person) {
-        var disposition = 50; //base disposition of 50
+        var disposition = person.opinion;
 
         disposition += 0.5 * (gameData.player.attributes.personality - 50)
 
@@ -86,7 +85,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
     
     function getNpcById(id) {
         var npc = '';
-        var listOfNpcs = Object.entries(gameData.npcs.list);
+        var listOfNpcs = Object.entries(gameData.npcs);
         for (var i = 0; i < listOfNpcs.length; i++) {
             if (id == listOfNpcs[i][1].id) {
                 npc = listOfNpcs[i][1];
@@ -116,24 +115,23 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         return updatedMap
     }
 
-    function getDoor(coords) {
-        var door = '';
+    function getDoorIndex(coords) {
         var listOfDoors = gameData.player.location.doors;
         for (var i = 0; i < listOfDoors.length; i++) {
             if ((listOfDoors[i].coords[0] == coords[0]) && 
                 (listOfDoors[i].coords[1] == coords[1])) {
                 
-                door = listOfDoors[i];
+                return i
             }
         }
-        return door;
     }
 
     function openDoor(coords) {
-        var door = getDoor(coords);
+        var doorIndex = getDoorIndex(coords);
         var updatedGameData = JSON.parse(JSON.stringify(gameData));
         var locations = Object.getOwnPropertyNames(gameData.locations);
         var playerLocation = gameData.player.location.name.replace(/\s/g, '');
+
         playerLocation = playerLocation.replace('-', '');
 
         for (var i = 0; i < locations.length; i++) {
@@ -142,21 +140,12 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             }
         }
 
-        door.icon = "1";
+        updatedGameData.player.location.doors[doorIndex].icon = "1";
+        updatedGameData.locations[playerLocation].doors[doorIndex].icon = "1"
+        updatedGameData.player.location.doors[doorIndex].locked = false;
+        updatedGameData.locations[playerLocation].doors[doorIndex].locked = false
 
-        updatedGameData.player.location = updatedGameData.locations[playerLocation]
-
-        console.log(updatedGameData.player.location.map);
-        console.log(updatedGameData.locations[playerLocation].map);
-
-        if (target) {
-            console.log(updatedGameData.player.location)
-
-            return updatedGameData.player.location;
-        } else {
-            console.log(updatedGameData);
-            setGameData(updatedGameData);
-        }
+        return updatedGameData.player.location;
     }
 
     function openContainer(container) {
@@ -210,14 +199,10 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
         if (raceChoice) {
             var updatedGameData = JSON.parse(JSON.stringify(gameData));
             var attributeList = Object.entries(updatedGameData.player.attributes)
-            console.log(attributeList);
             for (var i = 0; i < attributeList.length; i++) {
                 updatedGameData.player.attributes[attributeList[i][0]] = updatedGameData.player.attributes[attributeList[i][0]] + raceChoice.baseAttributes[i]
             }
             updatedGameData.player.race = raceChoice;
-
-            console.log(updatedGameData.player.attributes);
-            
 
             var health = (updatedGameData.player.attributes.strength + updatedGameData.player.attributes.endurance) / 2;
             var mana = updatedGameData.player.attributes.intelligence * (1 + raceChoice.manaMultiplier);
@@ -241,7 +226,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             var skillList = Object.values(updatedGameData.skills);
             var skillEntries = Object.entries(updatedGameData.skills);
             for (var i = 0; i < skillList.length; i++) { //for each skill
-                console.log(skillList[i])
                 var level = 5; //level defines the default level for each skill
                 for (var j = 0; j < updatedGameData.player.race.baseSkills.length; j++) { //for each racial skill bonus
                     if (updatedGameData.player.race.baseSkills[j][1].name == skillList[i].name) { //if player's race has a bonus to the skill
@@ -255,12 +239,10 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
 
                 var major = false;
                 var minor = false;
-                var misc = true;
 
                 for (var z = 0; z < classChoice.major.length; z++) { //for each class major skill
                     if (skillList[i].name === classChoice.major[z].name) { //if skill is a class major skill
                         major = true;
-                        misc = false;
                     }
                 }
 
@@ -268,7 +250,6 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                     for (var k = 0; k < classChoice.minor.length; k++) { //for each class minor skill
                         if (skillList[i].name === classChoice.minor[k].name) { //if skill is a class minor skill
                             minor = true;
-                            misc = false;
                         }
                     }
                 }
@@ -281,7 +262,9 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
 
                 updatedGameData.player.skills[skillEntries[i][0]] = level
             }
-            console.log(updatedGameData.player.skills)
+
+            updatedGameData.player.location = openDoor([6,26])
+
             updatedGameData.player.showInventory = true;
             setGameData(updatedGameData);
             setGettingClass(false);
@@ -317,7 +300,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
             updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.splice(itemIndex, 1)
         } else if (owner.name === gameData.player.name) {
             if (target) {
-                updatedGameData.npcs.list.fargoth.inventory.push(item)
+                updatedGameData.npcs[target.name.charAt(0).toLowerCase() + target.name.slice(1)].inventory.push(item)
             } else {
                 updatedGameData.player.location.containers[ownerIndex].inventory.push(item)
                 updatedGameData.locations[playerLocation].containers[ownerIndex].inventory.push(item)
@@ -393,7 +376,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                                                         = - Door to new area
                                                     </li>
                                                     <li>
-                                                        0/1 Door - (closed/open)
+                                                        0/1 - Door (closed/open)
                                                     </li>
                                                     <li>
                                                         $ - Chest
@@ -413,7 +396,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                                                     getContainer={getContainer}
                                                     openDoor={openDoor}
                                                     loadMap={loadMap}
-                                                    getDoor={getDoor}
+                                                    getDoorIndex={getDoorIndex}
                                                 />
                                             </div>
                                         </>
@@ -467,6 +450,7 @@ function GameWindow({ characterChoice, setCharacterChoice }) {
                             openDoor={openDoor}
                             setMap={setMap}
                             loadMap={loadMap}
+                            calculateDisposition={calculateDisposition}
                       />
                     : ""}
                 </>

@@ -6,7 +6,7 @@ function Inventory({owner, swapItemOwner}) {
         swapItemOwner(item, owner);
     }
     return (
-        <div className='morrowindFont mainGoldBoxOutline charSheetSection'>
+        <div className='morrowindFont morrowindColorText mainGoldBoxOutline charSheetSection'>
             <p className="headerBox">
                 <span className="headerText">
                     {owner.name === "Chest"

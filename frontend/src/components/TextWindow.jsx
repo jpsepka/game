@@ -5,12 +5,14 @@ import ProgressBar from './ProgressBar';
 function TextWindow({ setOptions, checkIfQuestCompleted, 
     checkQuestComplete, options, text, target, setText, 
     handleQuestItems, gameData, setGameData, setGettingRace, 
-    swapItemOwner, setGettingClass, openDoor, setMap, loadMap }) {
+    swapItemOwner, setGettingClass, openDoor, setMap, loadMap,
+    calculateDisposition }) {
     
     var notarget = true;
     const [getUserInput, setGetUserInput] = useState(false);
     const [choices, setChoices] = useState([]);
     const [quest, setQuest] = useState();
+    const [opinion, setOpinion] = useState(target.opinion);
 
     if (target.name == '') {
         notarget = true;
@@ -66,7 +68,6 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
 
     function handleOptionClick(choice) {
         setChoices([]);
-        console.log("-------------------------------------")
         console.log("Now handling option click...")
         if (target.dialogue[choice].quest) { //if option starts a quest
             console.log("option starts a quest")
@@ -139,9 +140,8 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
             var updatedGameData = JSON.parse(JSON.stringify(gameData))
             updatedGameData.player.name = prompt("What is your name?")
             updatedGameData.player.location = openDoor([3,7]);
-            console.log(updatedGameData.player.location);
-            updatedGameData.npcs.list.jiub.greeting = "You better do what they say...";
-            updatedGameData.npcs.list.jiub.dialogue = [];
+            updatedGameData.npcs.jiub.greeting = "You better do what they say...";
+            updatedGameData.npcs.jiub.dialogue = [];
             setGameData(updatedGameData);
             setMap(loadMap())
         } else if (target.dialogue[choice].id == 1) {//if option is for character race choice
@@ -152,8 +152,6 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
             setGettingClass(true);
         } else { //if option does not start a quest
             console.log("option does not start a quest")
-            console.log(target);
-            console.log(choice);
             setText(old => [...old, target.dialogue[choice].option, target.dialogue[choice].text]);
         }
         console.log("-------------------------------------")
@@ -177,6 +175,22 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
                 if (inQuestLog) { //if criteria is met and in quest log
                     console.log("criteria is met and quest is in quest log")
                     updatedGameData.player.questLog.filter((quest) => quest !== quest)
+                }
+                if (quest.reward) { //if quest has a reward
+                    console.log("quest has a reward")
+                    for (const [key, value] of Object.entries(quest.reward)) {
+                        if (key == 'disposition') {
+                            updatedGameData.npcs[target.name.charAt(0).toLowerCase() + target.name.slice(1)].opinion += value
+                            setOpinion(calculateDisposition(updatedGameData.npcs[target.name.charAt(0).toLowerCase() + target.name.slice(1)]))
+                        }
+                    }
+                }
+                if (quest.script) { //if quest has a script
+                    console.log("quest has a script")
+                    for (const [key, value] of Object.entries(quest.script)) {
+                        var newValue = value.replace('%PCNAME', gameData.player.name)
+                        updatedGameData.npcs[target.name.charAt(0).toLowerCase() + target.name.slice(1)][key] = newValue
+                    }
                 }
                 updatedGameData.player.questsCompleted.push(quest);
                 setText(old => [...old, quest.complete[1], quest.complete[0]])
@@ -239,7 +253,7 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
             <div className="col-sm-2 morrowindFont npcTextBoxSpecial npcTextBoxSizing">
                 <ProgressBar
                     maxVal = {100}
-                    val = {target.opinion}
+                    val = {opinion}
                     type = 'textWindow'
                 />
                 <div className="npcTextOptions goldBoxOutline">

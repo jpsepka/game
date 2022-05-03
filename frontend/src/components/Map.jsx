@@ -4,7 +4,7 @@ import { Location } from "../data/Location/Location";
 
 function Map({click, setText, setOptions, setTarget, map, setMap,
                 gameData, setGameData, openContainer, getContainer, openDoor,
-            loadMap, getDoor }) {
+            loadMap, getDoorIndex }) {
 
     const [translate, setTranslate] = useState({transform: 'translateX('+(gameData.player.coords[1]*-1)+'ch) translateY('+(gameData.player.coords[0]*-1)+'em)'})
     const [location, setLocation] = useState('');
@@ -46,7 +46,7 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
 
     function getNpcByLocation(location, coords) {
         var npc = '';
-        var listOfNpcs = Object.values(gameData.npcs.list);
+        var listOfNpcs = Object.values(gameData.npcs);
         for (var i = 0; i < listOfNpcs.length; i++) {
             if (listOfNpcs[i].location.id == location.id) {
                 if ((listOfNpcs[i].coords[0] == coords[0]) && 
@@ -117,9 +117,9 @@ function Map({click, setText, setOptions, setTarget, map, setMap,
                 undoMove(key);
             break;
             case "0":
-                var door = getDoor(gameData.player.coords);
-                if (door.locked) {
-                    openDoor(gameData.player.coords)
+                var doorIndex = getDoorIndex(gameData.player.coords);
+                if (!gameData.player.location.doors[doorIndex].locked) {
+                    updatedGameData.player.location = openDoor(gameData.player.coords)
                     undoMove(key);
                     setMap(loadMap())
                 } else {

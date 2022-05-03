@@ -51,7 +51,7 @@ var guard = new NPC([3, 21], "Guard", races.imperial, locations.imperialPrisonSh
 
 var socuciusErgalla = new NPC([6,33], "Socucius Ergalla", races.imperial, locations.censusAndExciseOffice, 
 "Faction", [0,0,0,0,0], [102,102], [100,100], [128,128], 14, [], [], 
-40, [dialogue.socuciusErgalla0], "@", "Ahh yes, we've been expecting you. You'll have to be recorded before you're officially released. There are a few ways we can do this.", 2, false);
+50, [dialogue.socuciusErgalla0], "@", "Ahh yes, we've been expecting you. You'll have to be recorded before you're officially released. There are a few ways we can do this.", 2, false);
 
 var guardTwo =  new NPC([10, 15], "Guard", races.redguard, locations.imperialPrisonShipAboveDeck,
 "faction", "stats", "health", "energy", "mana", 50, "inventory", "sttatsvase",
@@ -64,13 +64,11 @@ var fargoth = new NPC([25, 41], "Fargoth", races.woodElf, locations.seydaNeen,
 "Are you the one that boat dropped off? Odd to see a boat at that time of day. Hope the Imperials treated you okay. I swear they took my ring.", 5, "commoner")
 
 var npcs = {
-    list: {
-        jiub,
-        guard,
-        socuciusErgalla,
-        guardTwo,
-        fargoth
-    },
+    jiub,
+    guard,
+    socuciusErgalla,
+    guardTwo,
+    fargoth,
 
     getNpcsInLocation(location) {
         var output = [];

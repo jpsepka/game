@@ -68,7 +68,8 @@ function Register() {
         <h1>
           <FaUser /> Register
         </h1>
-        <p>Please create an account</p>
+        <p>Feel free to use dummy information for testing</p>
+        <p>(Email verification isnt required)</p>
       </section>
 
       <section className='form'>

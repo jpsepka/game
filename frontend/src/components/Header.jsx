@@ -15,26 +15,26 @@ function Header(props) {
     }
     return (
         <header className='header'>
-            <div className="logo">
-                <Link to='/'>CharacterSetter</Link>
+            <div>
+                <Link to='/' style={{color: "white"}}>Dashboard</Link>
             </div>
             <ul>
                 {user ? (
                     <li>
                     <button className='btn' onClick={onLogout}>
-                        <FaSignOutAlt /> logout
+                        <FaSignOutAlt style={{color: "white"}}/> logout
                     </button>
                     </li>
                 ) : (
                     <>
                         <li>
-                            <Link to='/login'>
+                            <Link style={{color: "white"}} to='/login'>
                                 <FaSignInAlt/> Login
                             </Link>
                         </li> 
                         <li>
-                            <Link to='/register'>
-                                <FaUser/> register
+                            <Link style={{color: "white"}} to='/register'>
+                                <FaUser /> Register
                             </Link>
                         </li>
                     </>

@@ -21,9 +21,41 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
     }
 
     useEffect(() => {
+        putLinksInText();
         var textBox = document.getElementById('npcDialogueBox')
         textBox.scrollTop = textBox.scrollHeight;
+        return function cleanup() {
+            document.removeEventListener("click", putLinksInText);
+          };
     }, [text])
+
+    function putLinksInText() {
+        for (var i = 0; i < text.length; i++) {
+            if (typeof text[i] == 'string') {
+                var test = document.getElementById('text' + i);
+                var newText = document.createElement('span');
+                var replaceText = 'Fargoth';
+
+                if (test.innerHTML.indexOf(replaceText) != -1) {
+                    test.innerHTML = test.innerHTML.replace(replaceText, "");
+                    newText.innerHTML = replaceText
+                    
+                    console.log(newText.outerHTML);
+                    test.innerHTML = test.innerHTML + newText.outerHTML;
+                    document.getElementById("text2").addEventListener('click', ()=> handleTextOptionClick())
+                }
+            }
+        }
+    }
+
+    function handleTextOptionClick() {
+        handleOptionClick(1);
+        document.getElementById('text2').removeEventListener("click");
+    }
+
+    function testFunc() {
+        console.log("hi");
+    }
 
     function getFollowUpQuest(quest) {
         var quests = Object.entries(gameData.dialogue);
@@ -232,7 +264,7 @@ function TextWindow({ setOptions, checkIfQuestCompleted,
                             </p>
                         )
                         : (
-                            <p className="morrowindFont npcText">
+                            <p id={'text' + id} className="morrowindFont npcText">
                                 {line}
                             </p>
                         )
